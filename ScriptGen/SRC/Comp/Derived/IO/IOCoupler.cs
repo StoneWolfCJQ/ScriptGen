@@ -20,7 +20,7 @@ namespace ScriptGen
         protected override int GetSO(Dictionary<string, string> d, CompInfoTemp output)
         {
             int so = base.GetSO(d, output);
-            ParseTopo(output.content[KeyWordDef.TOP]);
+            ParseTopo(output.content.ContainsKey(KeyWordDef.TOP) ? output.content[KeyWordDef.TOP] : d[KeyWordDef.TOP]);
             foreach (var dt in TopoDict)
             {
                 so += dt.First().Value;

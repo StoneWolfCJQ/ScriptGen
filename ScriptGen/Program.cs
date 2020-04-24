@@ -15,12 +15,12 @@ namespace ScriptGen
         [STAThread]
         static void Main(string[] args)
         {
-            MainHandler MH = new MainHandler();
             List<string> paths = args.ToList();
             while (true)
             {
                 foreach (string p in paths)
                 {
+                    MainHandler MH = new MainHandler();
                     if (p== "Q" || p == "q")
                     {
                         return;

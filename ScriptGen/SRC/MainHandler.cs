@@ -31,6 +31,16 @@ namespace ScriptGen
 
         public string Handle(string[] input)
         {
+            List<string> inputs = input.ToList();
+            for (int m = 0; m < inputs.Count; m++)
+            {
+                if (Regex.IsMatch(inputs[m], @"((^\s*(\/\/))|(^\s+$))") || string.IsNullOrEmpty(inputs[m]))
+                {
+                    inputs.RemoveAt(m);
+                    m--;
+                }
+            }
+            input = inputs.ToArray();
             List<CompInfoTemp> topolist = ScanTopo(input);
             ScanForCompInfo(input);
             FillTopoFromGeneralCompInfo(topolist, input);
@@ -47,17 +57,8 @@ namespace ScriptGen
             return script;
         }
 
-        List<CompInfoTemp> ScanTopo(string[] inputs)
+        List<CompInfoTemp> ScanTopo(string[] input)
         {
-            List<string> input = inputs.ToList();
-            for (int m = 0; m < input.Count; m++)
-            {
-                if (Regex.IsMatch(input[m], @"((^\s*(\/\/))|(^\s+$))") || string.IsNullOrEmpty(input[m]))
-                {
-                    input.RemoveAt(m);
-                    m--;
-                }
-            }
             List<Dictionary<string, string>> strDict = RegFunctions.GetTopoDict(input[0]);
             if (strDict.Count <= 0) 
             {
@@ -125,12 +126,12 @@ namespace ScriptGen
                 if (!defaultDict.ContainsKey(c.gname))
                 {
                     Dictionary<string, string> d = ScanFile(c.gname);
-                    if (!DictionaryFunctions.NotNullOrEmpty(d)) 
+                    if (!DictionaryFunctions.NotNullOrEmpty(d))
                     {
                         throw new Exception($"未定义的部件{c.gname}");
                     }
                     defaultDict.Add(c.gname, d);
-                }              
+                }
             }
         }
 
