@@ -15,20 +15,36 @@ namespace ScriptGen
         [STAThread]
         static void Main(string[] args)
         {
-            foreach (string ss in args)
+            MainHandler MH = new MainHandler();
+            List<string> paths = args.ToList();
+            while (true)
             {
-                Console.WriteLine(ss);
+                foreach (string p in paths)
+                {
+                    if (p== "Q" || p == "q")
+                    {
+                        return;
+                    }
+                    string path = p.Trim('"');
+                    try
+                    {
+                        string[] fileStrs = File.ReadAllLines(path);
+                        string prg = MH.Handle(fileStrs);
+                        string name = Path.GetDirectoryName(path) + '\\' + Path.GetFileNameWithoutExtension(path) + ".prg";
+                        if (!File.Exists(name))
+                        {
+                            File.Create(name).Close();
+                        }
+                        File.WriteAllText(name, prg);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                paths.Clear();
+                paths.Add(Console.ReadLine());
             }
-            Console.ReadKey();
-            MainHandler mh = new MainHandler();
-            string[] s = File.ReadAllLines("1.txt");
-            string r = mh.Handle(s);
-            string name = "scripts.prg";
-            if (!File.Exists(name))
-            {
-                File.Create(name);
-            }
-            File.WriteAllText(name, r);
         }
     }
 }
