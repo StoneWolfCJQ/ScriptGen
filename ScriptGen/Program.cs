@@ -35,7 +35,28 @@ namespace ScriptGen
                         {
                             File.Create(name).Close();
                         }
-                        File.WriteAllText(name, prg);
+                        else
+                        {
+                            while (true)
+                            {
+                                Console.Write($"文件{name}已存在，是否覆盖（y/n）:");
+                                string input = Console.ReadLine();
+                                if (input == "y" || input == "Y")
+                                {
+                                    File.WriteAllText(name, prg);
+                                    Console.WriteLine($"写入{name}成功");
+                                    break;
+                                }
+                                else if (input == "N" || input == "n")
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("无效输入");
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
@@ -43,6 +64,7 @@ namespace ScriptGen
                     }
                 }
                 paths.Clear();
+                Console.WriteLine("\r\n请将单个文件拖入");
                 paths.Add(Console.ReadLine());
             }
         }
