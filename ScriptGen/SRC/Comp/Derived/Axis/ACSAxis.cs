@@ -16,7 +16,7 @@ namespace ScriptGen
                           from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
                           let ndict=new Dictionary<string, string>(dict)
                           group ndict by n into gdicts orderby gdicts.Key
-                          let rdict = ReplaceAxisNo(gdicts.First(), gdicts.Key)
+                          let rdict = ReplaceAxisNo(gdicts.Last(), gdicts.Key)
                           select rdict).ToList();
             foreach (var content in c.contents)
             {

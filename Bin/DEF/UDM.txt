@@ -9,8 +9,8 @@ HF:0
 CN:0
 MU:1
 //AN:
-//HM:LI
-//HG:0
+//HM:
+//HG:
 
 //Depending Parameter
 //CS://When CN=1

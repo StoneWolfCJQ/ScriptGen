@@ -137,6 +137,13 @@ namespace ScriptGen
 
         void FillTopoFromUserCompInfo(List<CompInfoTemp> topolist, string[] input)
         {
+            input = (from cc in input
+                     let rt = Regex.Match(cc, RegFunctions.compCustomReg)
+                     where rt.Success
+                     let name = rt.Groups[1].Value
+                     let num = rt.Groups[2].Value.Split(',')
+                     from n in num
+                     select name + n + rt.Groups[4]).ToArray();
             foreach (string s in input)
             {
                 CompInfoTemp t = topolist.Find(c => c.rname == s.Split('@')[0]);

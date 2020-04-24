@@ -13,9 +13,10 @@ namespace ScriptGen
     {
         public const string defaultReg = @"(?<=^|\r\n)(\w{2,})\:([^(\@\/\s)]+)(?=(((\/\/)+(\d\D)*)|\s*|$))";
         public const string defLineReg = @"(?<=\@)(\w{2,})\:([^\@\/\s]+)(?=\@|$)";
-        public const string topoReg = @"(?<=\@)(\w{2,})\:?([^\@\/\s]+)?(?=\@|$)";
+        public const string topoReg = @"(?i)(?<=\@)([a-z]{2,})\:?([^\@\/\s]+)?(?=\@|$)";
         public const string compBaseInfoReg = @"^(?i)[a-z]{2,}\@";
         public const string repeatRegTail = @"\s*[\r|\n][^&]+[\r|\n]\s*&\s*?\r\n";
+        public const string compCustomReg = @"^(?i)([a-z]{2,})((\d+,)*\d+)((@[^@]+)+)$";
 
         public static Dictionary<string, string> GetDictFromReg(string input, string pattern)
         {
