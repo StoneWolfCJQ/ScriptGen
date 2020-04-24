@@ -51,9 +51,13 @@
     <Compile Include="SRC\Comp\Derived\Axis\CANAxis.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\ACSAxis.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\CommonAxis.cs" />
-    <Compile Include="SRC\Comp\Derived\IO\EC.cs" />
+    <Compile Include="SRC\Comp\Derived\EC\EC.cs" />
     <Compile Include="SRC\Comp\Derived\IO\IOCoupler.cs" />
     <Compile Include="SRC\Comp\Base\CompTemplate.cs" />
+    <Compile Include="SRC\Util\DictionaryFunctions.cs" />
+    <Compile Include="SRC\Util\RegFunctions.cs" />
+    <Compile Include="SRC\Util\TextFunctions.cs" />
+    <Compile Include="SRC\Util\Definitions.cs" />
     <Compile Include="SRC\MainHandler.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -77,8 +81,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SRC\Comp\Derived\EC\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

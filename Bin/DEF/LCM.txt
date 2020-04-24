@@ -1,5 +1,5 @@
-AO:4//Axis Occupied
-SO:1//Slave Occupied
-AT:LCM//Axis Type-ACS,CAN,LCM,IO,EC
-
+//System Parameter
+AO:4
+SO:1
+AT:LCM
 

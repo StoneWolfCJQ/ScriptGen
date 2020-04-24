@@ -39,19 +39,19 @@ namespace ScriptGen
                 HM += "I";
             }
 
-            int HGIndex = GetHomeIndex(c, homeBufferNo);
-            int count = GetHomeCount(c, homeBufferNo);
+            int HGIndex = GetHomeIndex(c, homeBufferNo, scripts);
+            int count = GetHomeCount(c, homeBufferNo, scripts);
 
             List<Dictionary<string, string>> homeDictList = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>()
                 {
-                    {"#AxisNo", GetAxisNo(c).ToString()},
+                    {"#AxisNo#", GetAxisNo(c).ToString()},
                     {"@HS", c.content[KeyWordDef.HS] },
-                    {"@HP", c.content.ContainsKey(c.content[KeyWordDef.HP])? c.content[KeyWordDef.HP] : "0" },
+                    {"@HP", c.content.ContainsKey(KeyWordDef.HP)? c.content[KeyWordDef.HP] : "0" },
                     {"@HF", c.content[KeyWordDef.HF] },
                     {"#HomingMethod#", HM },
-                    {"#GoSafe#" , c.content.ContainsKey(c.content[KeyWordDef.HP])? "" : "!"}
+                    {"#GoSafe#" , c.content.ContainsKey(KeyWordDef.HP)? "" : "!"}
                 }
             };
             string repeatKeyWord = "HomeRepeat";
@@ -63,7 +63,7 @@ namespace ScriptGen
                 {
                     new Dictionary<string, string>()
                     {
-                        {"#AxisNo", GetAxisNo(c).ToString()},
+                        {"#AxisNo#", GetAxisNo(c).ToString()},
                     }
                 };
                 repeatKeyWord = "ZAxisSafeRepeat";
@@ -78,14 +78,14 @@ namespace ScriptGen
             {
                 return;
             }
-            int index = GetHomeIndex(c, homeBufferNo);
-            int count = GetHomeCount(c, homeBufferNo);
+            int index = GetHomeIndex(c, homeBufferNo, scripts);
+            int count = GetHomeCount(c, homeBufferNo, scripts);
 
             List<Dictionary<string, string>> compDictList = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>()
                 {
-                    {"#AxisNo", GetAxisNo(c).ToString()},
+                    {"#AxisNo#", GetAxisNo(c).ToString()},
                     {"#BCNo#", compBufferNo.ToString()},
                     {"@CS", c.content[KeyWordDef.CS]},
                     {"@CT", c.content[KeyWordDef.CT]},
@@ -93,10 +93,10 @@ namespace ScriptGen
             };
             string repeatKeyWord = "CompRepeat";
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, compDictList, index, count);
-            index = CompManager.GetBufferIndex(compBufferNo);
-            count = CompManager.GetBufferCount(compBufferNo);
+            index = CompManager.GetBufferIndex(compBufferNo, scripts);
+            count = CompManager.GetBufferCount(compBufferNo, scripts);
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, compDictList, index, count);
-            index = CompManager.GetBufferIndex(ST.DEF);
+            index = CompManager.GetBufferIndex(ST.DEF, scripts);
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, compDictList, index);
         }
 
@@ -108,19 +108,19 @@ namespace ScriptGen
         protected override void WriteAuto(CompInfoTemp c, int autoBufferNo, ref string scripts)
         {
             bool LL, RL;
-            LL = int.Parse(c.content[KeyWordDef.LL]) > 1 ? true : false;
-            RL = int.Parse(c.content[KeyWordDef.RL]) > 1 ? true : false;
+            LL = c.content.ContainsKey(KeyWordDef.LL);
+            RL = c.content.ContainsKey(KeyWordDef.RL);
             if (LL || RL)
             {
-                int index = CompManager.GetBufferIndex(autoBufferNo);
-                int count = CompManager.GetBufferIndex(autoBufferNo);
+                int index = CompManager.GetBufferIndex(autoBufferNo, scripts);
+                int count = CompManager.GetBufferIndex(autoBufferNo, scripts);
                 List<Dictionary<string, string>> autoDictList = new List<Dictionary<string, string>>()
                 {
                     new Dictionary<string, string>()
                     {
-                        {"#AxisNo", GetAxisNo(c).ToString()},
-                        {"@RL", RL ? c.content[KeyWordDef.RL] : "" },
-                        {"@LL", LL ? c.content[KeyWordDef.LL] : "" },
+                        {"#AxisNo#", GetAxisNo(c).ToString()},
+                        {"@RL", RL ? c.content[KeyWordDef.RL] : "#RL" },
+                        {"@LL", LL ? c.content[KeyWordDef.LL] : "#LL" },
                         {"#RightLimit#", RL ? "" : "!" },
                         {"#LeftLimit#", LL ? "" : "!" },
                     }
@@ -135,15 +135,15 @@ namespace ScriptGen
             //Nothing should be done
         }
 
-        protected virtual int GetHomeIndex(CompInfoTemp c, List<int> homeBufferNo)
+        protected virtual int GetHomeIndex(CompInfoTemp c, List<int> homeBufferNo, string scripts)
         {            
-            int HGIndex = CompManager.GetBufferIndex(GetHomeBufferNo(c, homeBufferNo));
+            int HGIndex = CompManager.GetBufferIndex(GetHomeBufferNo(c, homeBufferNo), scripts);
             return HGIndex;
         }
 
-        protected virtual int GetHomeCount(CompInfoTemp c, List<int> homeBufferNo)
+        protected virtual int GetHomeCount(CompInfoTemp c, List<int> homeBufferNo, string scripts)
         {
-            int count = CompManager.GetBufferCount(GetHomeBufferNo(c, homeBufferNo));
+            int count = CompManager.GetBufferCount(GetHomeBufferNo(c, homeBufferNo), scripts);
             return count;
         }
 

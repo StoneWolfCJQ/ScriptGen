@@ -20,7 +20,7 @@ IOConfig:
 AxisConfig:
 &CANRepeat
 	AxisNo=#AxisNo#
-	EFAC(AxisNo) =@SD/@PS
+	EFAC(AxisNo)=@SD/@PS
 	MFLAGS(AxisNo).#INVENC=@INV		
 	TARGRAD(AxisNo)=@TARGRAD
 	SETTLE(AxisNo)=@SETTLE
@@ -38,11 +38,13 @@ Call CommutProcess
 
 !!---------------While Loop
 INT EONCE;EONCE=1
+INT EMG
 @LIGHT=1
 Unstop:
 	WHILE 1		
+        EMG=9
 		!EMG Function
-		IF *@@EMG=0
+		IF @@EMG=0
 			KILL ALL		
 			@MOTOR=0
 			@DUST=0
@@ -51,7 +53,7 @@ Unstop:
 			@BUZZ=1
 			@DOOR=0
 			@ION=0
-			STOP ALL
+		    HALT ALL
 			DISABLE ALL
 			EONCE=0
 		ELSE
@@ -100,8 +102,8 @@ LimitDetect:
 #LeftLimit#		SAFINI(AxisNo).#LL=1
 #LeftLimit#	ELSE
 #LeftLimit#		SAFINI(AxisNo).#LL=0
-#LeftLimit#	END
-	
+#LeftLimit#	END	
+
 
 &
 RET

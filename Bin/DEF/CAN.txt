@@ -1,21 +1,26 @@
-AO:1//Axis Occupied
-SO:1//Slave Occupied
-AT:CAN//Axis Type-ACS,CAN,LCM,IO,EC
-//HM:L//Homing Method,default undefined
+//System Paramter
+AO:1
+SO:1
+AT:CAN
+
+//Neccessary Paramter
 HS:50
 HF:0
-//HP:0
-//HG:0
 TARGRAD:0.0005	
 SETTLE:5
 CERRI:5	
 CERRV:5	
 CERRA:5	
-XVEL:500	
-//LL:0	
-//RL:0	
+XVEL:500
 SD:5
 PS:8388608
 INV:0
+CN:0
+//HM:L
+//HG:0
 
+//Unneccesary Parameter
+//HP:
+//LL:
+//RL:
 

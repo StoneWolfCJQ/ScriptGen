@@ -1,13 +1,25 @@
-AO:4//Axis Occupied
-SO:1//Slave Occupied
-AT:ACS//Axis Type-ACS,CAN,LCM,IO,EC,Other
-HM:RZ//Homing Method
-HS:30//
-HF:0
-//HP:-5
-//HG:0
-CN:0
-MU:0
+//System Parameter
+AO:4
+SO:1
+AT:ACS
 
+//Neccessary Parameter
+HS:50
+HF:0
+MU:0
+CN:0
+//AN:
+//HM:LI
+//HG:0
+
+//Depending Parameter
+//CS://When CN=1
+//CT://When CN=1
+
+//Unneccesary Parameter
+//HP:
+//LL:
+//RL:
+//SKIP:
 
 

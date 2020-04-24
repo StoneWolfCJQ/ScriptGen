@@ -10,25 +10,25 @@ namespace ScriptGen
     {
         public override string Type { get { return "ACS"; } }
 
-        protected List<Dictionary<string, string>> axisContents;
-
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
-            axisContents = (from dict in c.contents
-                      from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
-                      group dict by n into gdicts
-                      let ndict = ReplaceAxisNo(gdicts.First(), gdicts.Key)
-                      select ndict).ToList();
-            foreach (var content in axisContents)
+            c.contents = (from dict in c.contents
+                          from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
+                          let ndict=new Dictionary<string, string>(dict)
+                          group ndict by n into gdicts orderby gdicts.Key
+                          let rdict = ReplaceAxisNo(gdicts.First(), gdicts.Key)
+                          select rdict).ToList();
+            foreach (var content in c.contents)
             {
                 c.content = content;
+                CheckAxisNo(c);
                 base.WriteHome(c, homeBufferNo, ref scripts);
             }
         }
 
         protected override void WriteComp(CompInfoTemp c, int compBufferNo, List<int> homeBufferNo, ref string scripts)
         {
-            foreach (var content in axisContents)
+            foreach (var content in c.contents)
             {
                 c.content = content;
                 base.WriteComp(c, compBufferNo, homeBufferNo, ref scripts);
@@ -37,7 +37,7 @@ namespace ScriptGen
 
         protected override void WriteAuto(CompInfoTemp c, int autoBufferNo, ref string scripts)
         {
-            foreach (var content in axisContents)
+            foreach (var content in c.contents)
             {
                 c.content = content;
                 WriteAutoSingle(c, autoBufferNo, ref scripts);
@@ -47,9 +47,9 @@ namespace ScriptGen
         protected virtual void WriteAutoSingle(CompInfoTemp c, int autoBufferNo, ref string scripts)
         {
 
-            bool MU = int.Parse(c.content[KeyWordDef.MU]) > 1 ? true : false;
-            int index = CompManager.GetBufferIndex(autoBufferNo);
-            int count = CompManager.GetBufferIndex(autoBufferNo);
+            bool MU = int.Parse(c.content[KeyWordDef.MU]) > 0 ? true : false;
+            int index = CompManager.GetBufferIndex(autoBufferNo, scripts);
+            int count = CompManager.GetBufferIndex(autoBufferNo, scripts);
             List<Dictionary<string, string>> autoDictList;
             if (MU)
             {
@@ -57,7 +57,7 @@ namespace ScriptGen
                 {
                     new Dictionary<string, string>()
                     {
-                        {"#AxisNo", GetAxisNo(c).ToString()},
+                        {"#AxisNo#", GetAxisNo(c).ToString()},
                     }
                 };
                 string repeatKeyWord = "CommutRepeat";
@@ -71,6 +71,14 @@ namespace ScriptGen
         {
             dict[KeyWordDef.AN] = axisNo.ToString();
             return dict;
+        }
+
+        protected virtual void CheckAxisNo(CompInfoTemp c)
+        {
+            if (int.Parse(c.content[KeyWordDef.AN]) >= c.axisOccupied)
+            {
+                throw new Exception($"{c.rname}轴号{c.content[KeyWordDef.AN]}超限");
+            }
         }
     }
 }

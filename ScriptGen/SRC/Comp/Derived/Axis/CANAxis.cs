@@ -12,33 +12,20 @@ namespace ScriptGen
 
         protected override void WriteAuto(CompInfoTemp c, int autoBufferNo, ref string scripts)
         {
-            int index = CompManager.GetBufferIndex(autoBufferNo);
-            int count = CompManager.GetBufferIndex(autoBufferNo);
+            int index = CompManager.GetBufferIndex(autoBufferNo, scripts);
+            int count = CompManager.GetBufferIndex(autoBufferNo, scripts);
             List<Dictionary<string, string>> autoDictList;
-            autoDictList = new List<Dictionary<string, string>>()
-            {
-                new Dictionary<string, string>()
-                {
-                    {"#AxisNo", GetAxisNo(c).ToString()},
-                }
-            };
-            string repeatKeyWord = "CommutRepeat";
+            autoDictList =  new List<Dictionary<string, string>>() { c.content.ToDictionary(k => '@' + k.Key, v => v.Value) };
+            autoDictList.First().Add("#AxisNo#", c.axisStart.ToString());
+            string repeatKeyWord = "CANRepeat";
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, autoDictList, index, count);
+
+            base.WriteAuto(c, autoBufferNo, ref scripts);
         }
 
-        protected virtual void WriteAutoSingle(CompInfoTemp c, int autoBufferNo, ref string scripts)
+        protected override int GetAxisNo(CompInfoTemp c)
         {
-            bool MU = int.Parse(c.content[KeyWordDef.MU]) > 1 ? true : false;
-
-
+            return c.axisStart;
         }
-
-        protected virtual Dictionary<string, string> ReplaceAxisNo(Dictionary<string, string> dict, int axisNo)
-        {
-            dict[KeyWordDef.AN] = axisNo.ToString();
-            return dict;
-        }
-
-        protected override 
     }
 }

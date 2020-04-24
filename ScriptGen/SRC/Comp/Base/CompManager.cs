@@ -12,10 +12,13 @@ namespace ScriptGen
         {
             new IOCoupler(),
             new EC(),
+            new ACSAxis(),
+            new CANAxis(),
         };
 
         static Dictionary<ST, List<int>> scriptNo;
-        static Dictionary<int, int> scriptIndex;
+        public const string RNReturnStr = "\r\n";
+        public const string bufferSearchStr = "!ForSearchUseDoNotDuplicate";
 
         public void FillSlaveAndACSAxis(ref int slaveIndex, ref int axisIndex,
             Dictionary<string, string> source, ref CompInfoTemp output)
@@ -36,10 +39,10 @@ namespace ScriptGen
                 throw new Exception("第一个部件不是EC");
             }
             string baseScripts = GenerateBase(STContent, topoList[0]);
-            for (int i = 1; i < topoList.Count; i++) 
+            for (int i = 0; i < topoList.Count; i++) 
             {
                 CompInfoTemp c = topoList[i];
-                if (CheckMainController(c))
+                if (CheckMainController(c) && i > 0)
                 {
                     throw new Exception("存在多个EC");
                 }
@@ -52,42 +55,35 @@ namespace ScriptGen
         string GenerateBase(Dictionary<ST, string> STContent, CompInfoTemp c)
         {
             scriptNo = new Dictionary<ST, List<int>>();
-            scriptIndex = new Dictionary<int, int>();
             List<int> homeBuffer = c.content[KeyWordDef.BH].Split(",".ToArray(),StringSplitOptions.RemoveEmptyEntries)
                 .Select(s=>int.Parse(s)).ToList();
             int compBuffer = int.Parse(c.content[KeyWordDef.BC]);
             int laserBuffer = int.Parse(c.content[KeyWordDef.BL]);
             int autoBuffer = int.Parse(c.content[KeyWordDef.BA]);
-            string ss = "";
-            string rn = "\r\n";
+            string ss = "";            
             List<int> li = new List<int>();
             foreach (int i in homeBuffer)
             {
-                scriptIndex.Add(i, ss.Length);
-                ss += $"{rn}#{i}{rn}" + STContent[ST.HOME] + rn;
+                ss += ContraScript(i, STContent, ST.HOME);
                 li.Add(i);
             }
-            scriptNo.Add(ST.HOME, li);
+            scriptNo.Add(ST.HOME, new List<int>(li));
 
-            scriptIndex.Add(compBuffer, ss.Length);
-            ss += $"{rn}#{compBuffer}{rn}" + STContent[ST.COMP] + rn;
+            ss += ContraScript(compBuffer, STContent, ST.COMP);
             scriptNo.Add(ST.COMP, new List<int>() { compBuffer });
             li.Add(compBuffer);
 
-            scriptIndex.Add(laserBuffer, ss.Length);
-            ss += $"{rn}#{laserBuffer}{rn}" + STContent[ST.LASER] + rn;
+            ss += ContraScript(laserBuffer, STContent, ST.LASER);
             scriptNo.Add(ST.LASER, new List<int>() { laserBuffer });
             li.Add(laserBuffer);
 
-            scriptIndex.Add(autoBuffer, ss.Length);
-            ss += $"{rn}#{autoBuffer}{rn}" + STContent[ST.AUTO] + rn;
+            ss += ContraScript(autoBuffer, STContent, ST.AUTO);
             scriptNo.Add(ST.AUTO, new List<int>() { autoBuffer });
             li.Add(autoBuffer);
 
             CheckBufferNo(li);
 
-            scriptIndex.Add(999, ss.Length);
-            ss += $"{rn}#A{rn}" + STContent[ST.DEF];
+            ss += ContraScript(999, STContent, ST.DEF);
             scriptNo.Add(ST.DEF, new List<int>() { 999 });
             return ss;
         }
@@ -120,32 +116,41 @@ namespace ScriptGen
             return c;
         }
 
-        public static int GetBufferIndex(int bufferNo)
+        static string ContraScript(int bufferNo, Dictionary<ST, string> STContent, ST st)
         {
-            return scriptIndex[bufferNo];
+            return GetBufferSearchString(bufferNo) + STContent[st] + RNReturnStr;
         }
 
-        public static int GetBufferIndex(ST st)
+        static string GetBufferSearchString(int bufferNo)
         {
-            return GetBufferIndex(scriptNo[st][0]);
+            string s = bufferNo.ToString();
+            if (999 == bufferNo) { s = "A"; }
+            return $"{RNReturnStr}#{s}{RNReturnStr}{bufferSearchStr}{RNReturnStr}";
         }
 
-        public static List<int> GetBufferIndexes(ST st)
+        public static int GetBufferIndex(int bufferNo, string scripts)
         {
-            return scriptNo[st].Select(i => GetBufferIndex(i)).ToList();
+            return scripts.IndexOf(GetBufferSearchString(bufferNo));
         }
 
-        public static int GetNextBufferIndex(int bufferNo)
+        public static int GetBufferIndex(ST st, string scripts)
         {
-            int index = scriptIndex.ToList()
-                [scriptIndex.ToList().FindIndex(kp => kp.Key == bufferNo) + 1]
-                .Value;
-            return index;
+            return GetBufferIndex(scriptNo[st][0], scripts);
         }
 
-        public static int GetBufferCount(int bufferNo)
+        public static int GetNextBufferIndex(int bufferNo, string scripts)
         {
-            int count = GetBufferIndex(bufferNo) - GetNextBufferIndex(bufferNo);
+            var SList = from sl in scriptNo
+                        from si in sl.Value
+                        select si;
+
+            int nextBufferNo = SList.ToList()[SList.ToList().FindIndex(kp => kp == bufferNo) + 1];
+            return GetBufferIndex(nextBufferNo, scripts);
+        }
+
+        public static int GetBufferCount(int bufferNo, string scripts)
+        {
+            int count = GetNextBufferIndex(bufferNo, scripts) - GetBufferIndex(bufferNo, scripts);
             return count;
         }
     }

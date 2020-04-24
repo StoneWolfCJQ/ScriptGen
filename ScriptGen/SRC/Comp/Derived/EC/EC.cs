@@ -16,7 +16,7 @@ namespace ScriptGen
             //Nothing should be done
         }
 
-        protected override void WriteComp(CompInfoTemp c, int compBufferNo, ref string scripts)
+        protected override void WriteComp(CompInfoTemp c, int compBufferNo, List<int> homeBufferNo, ref string scripts)
         {
             //Nothing should be done
         }

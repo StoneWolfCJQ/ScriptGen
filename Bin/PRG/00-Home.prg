@@ -37,7 +37,7 @@ Main:
 &HomeRepeat
 nAxis=#AxisNo#
 dfSpeed=@HS
-safepos=@HP
+safePos=@HP
 homeOffset=@HF
 call AxisSet
 call LeaveLimit
@@ -46,7 +46,6 @@ call #HomingMethod#
 
 
 &
-
 &CompRepeat
 TILL ^PST(#BCNo#).#RUN
 Start #BCNo#, AxisComp#AxisNo#
@@ -54,7 +53,7 @@ WAIT 100
 
 
 &
-
+STOP
 !---------------------Home Functions
 !!--------Parameter Setting
 AxisSet:

@@ -127,10 +127,14 @@ namespace ScriptGen
                     slaveIndex++;
                 }
             }
-            int startIndex = CompManager.GetBufferIndex(ST.AUTO); // scripts.IndexOf($"#{autoBufferNo}\r\n");
+            int startIndex = CompManager.GetBufferIndex(ST.AUTO, scripts); // scripts.IndexOf($"#{autoBufferNo}\r\n");
             int j= scripts.IndexOf($"#{autoBufferNo}\r\n");
             TextFunctions.AppendMultiRepeat(ref scripts, IKeyWord, IDictList, startIndex);
             TextFunctions.AppendMultiRepeat(ref scripts, OKeyWord, ODictList, startIndex);
+            if (!c.content.ContainsKey("EMG"))
+            {
+                c.content.Add("EMG", "EMG");
+            }
             TextFunctions.ReplaceSingle(ref scripts, c.content, startIndex);
             TextFunctions.AppendMultiNoRepeat(ref scripts, c.content, startIndex);
         }

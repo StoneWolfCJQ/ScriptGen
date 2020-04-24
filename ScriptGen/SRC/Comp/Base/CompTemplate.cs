@@ -33,10 +33,10 @@ namespace ScriptGen
         {
             foreach (var kv in source)
             {
-                DictionaryFunction.AddOnlyNewPair(kv, output.content);
+                DictionaryFunctions.AddOnlyNewPair(kv, output.content);
                 foreach (var dt in output.contents)
                 {
-                    DictionaryFunction.AddOnlyNewPair(kv, dt);
+                    DictionaryFunctions.AddOnlyNewPair(kv, dt);
                 }
             }
             if (Type != ACSStr)
