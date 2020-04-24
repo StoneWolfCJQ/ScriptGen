@@ -1,0 +1,22 @@
+AO:0//Axis Occupied
+SO:1//Slave Occupied
+AT:IOC//Axis Type-ACS,CAN,LCM,IO,EC
+INAME:EIN
+ONAME:EOUT
+//LIGHT:
+//DUST:
+//SHUTTER:
+//RED:
+//GREEN:
+//YELLOW:
+//BUZZ:
+//ION:
+//MOTOR:
+//EMG:
+//TOP:I3O4I2//input and output topology
+ISI:AUTO//input starting index
+OSI:AUTO//output starting index
+
+
+
+

@@ -1,0 +1,21 @@
+AO:1//Axis Occupied
+SO:1//Slave Occupied
+AT:CAN//Axis Type-ACS,CAN,LCM,IO,EC
+//HM:L//Homing Method,default undefined
+HS:50
+HF:0
+//HP:0
+//HG:0
+TARGRAD:0.0005	
+SETTLE:5
+CERRI:5	
+CERRV:5	
+CERRA:5	
+XVEL:500	
+//LL:0	
+//RL:0	
+SD:5
+PS:8388608
+INV:0
+
+

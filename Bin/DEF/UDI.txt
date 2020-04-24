@@ -1,0 +1,13 @@
+AO:4//Axis Occupied
+SO:1//Slave Occupied
+AT:ACS//Axis Type-ACS,CAN,LCM,IO,EC,Other
+HM:RZ//Homing Method
+HS:30//
+HF:0
+//HP:-5
+//HG:0
+CN:0
+MU:0
+
+
+

@@ -1,0 +1,14 @@
+D:\Stone\05-程序\ScriptGen\ScriptGen\bin\Debug\ScriptGen.exe.config
+D:\Stone\05-程序\ScriptGen\ScriptGen\bin\Debug\ScriptGen.exe
+D:\Stone\05-程序\ScriptGen\ScriptGen\bin\Debug\ScriptGen.pdb
+D:\Stone\05-程序\Bin\ScriptGen.exe.config
+D:\Stone\05-程序\Bin\ScriptGen.exe
+D:\Stone\05-程序\Bin\ScriptGen.pdb
+D:\Stone\05-程序\ScriptGen\Bin\ScriptGen.exe.config
+D:\Stone\05-程序\ScriptGen\Bin\ScriptGen.exe
+D:\Stone\05-程序\ScriptGen\Bin\ScriptGen.pdb
+D:\Stone\05-程序\ScriptGen\ScriptGen\obj\Debug\ScriptGen.Properties.Resources.resources
+D:\Stone\05-程序\ScriptGen\ScriptGen\obj\Debug\ScriptGen.csproj.GenerateResource.Cache
+D:\Stone\05-程序\ScriptGen\ScriptGen\obj\Debug\ScriptGen.exe
+D:\Stone\05-程序\ScriptGen\ScriptGen\obj\Debug\ScriptGen.pdb
+D:\Stone\05-程序\ScriptGen\ScriptGen\obj\Debug\ScriptGen.csprojResolveAssemblyReference.cache

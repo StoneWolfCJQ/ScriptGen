@@ -1,0 +1,5 @@
+AO:4//Axis Occupied
+SO:1//Slave Occupied
+AT:LCM//Axis Type-ACS,CAN,LCM,IO,EC
+
+

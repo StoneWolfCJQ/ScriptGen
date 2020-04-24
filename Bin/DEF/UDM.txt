@@ -1,0 +1,15 @@
+AO:2//Axis Occupied
+SO:1//Slave Occupied
+AT:ACS//Axis Type-ACS,CAN,LCM,IO,EC
+HM:LI//Homing Method
+HS:50//
+HF:0
+//HP:0
+HG:0
+CN:0
+CS:0
+CE:0
+CT:0
+MU:1
+
+
