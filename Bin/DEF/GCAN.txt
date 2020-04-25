@@ -14,16 +14,16 @@ CERRA:5
 XVEL:500
 INV:0
 CN:0
+//HM:
 
 //Depending Parameter
-HS:30//When HM
-HF:0//When HM
-//HG://When HM
+HS:30//When HM!=D
+HF:0//When HM!=D
+//HG://When HM!=D
 //CS://When CN=1
 //CT://When CN=1
 
 //Unneccesary Parameter
-//HM:
 //HP:
 //LL:
 //RL:
