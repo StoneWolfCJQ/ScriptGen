@@ -14,8 +14,14 @@ namespace ScriptGen
         protected virtual string TopoReg { get { return @"(?i)([io])(\d+)"; } }
         protected virtual List<Dictionary<bool ,int>> TopoDict { get; set; }
 
-        protected static int inputStartIndex = 0;
-        protected static int outputStartIndex = 0;
+        protected static int inputStartIndex;
+        protected static int outputStartIndex;
+
+        public IOCoupler()
+        {
+            inputStartIndex = 0;
+            outputStartIndex = 0;
+        }
 
         protected override int GetSO(Dictionary<string, string> d, CompInfoTemp output)
         {

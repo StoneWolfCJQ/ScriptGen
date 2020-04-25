@@ -34,6 +34,7 @@ namespace ScriptGen
                         if (!File.Exists(name))
                         {
                             File.Create(name).Close();
+                            File.WriteAllText(name, prg);
                         }
                         else
                         {
