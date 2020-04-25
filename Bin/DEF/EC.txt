@@ -4,7 +4,7 @@ SO:0
 AT:EC
 
 //Neccessary Paramter
-BH:1,2,3
-BC:4
-BL:5
-BA:15
+//BH:
+//BC:
+//BL:
+//BA:

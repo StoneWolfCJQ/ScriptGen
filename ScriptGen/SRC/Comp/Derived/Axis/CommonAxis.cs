@@ -12,9 +12,7 @@ namespace ScriptGen
 
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
-            string CHM = c.content[KeyWordDef.HM];
-
-            if (CHM.Contains("D"))
+            if (!c.content.TryGetValue(KeyWordDef.HM, out string CHM))
             {
                 return;
             }

@@ -1,12 +1,19 @@
 //System Paramter
-AO:2
+AO:1
 SO:1
-AT:ACS
+AT:CAN
 
-//Neccessary Parameter
+//Neccessary Paramter
+//SD:5
+//PS:8388608
+TARGRAD:0.01
+SETTLE:5
+CERRI:5	
+CERRV:5	
+CERRA:5	
+XVEL:500
+INV:0
 CN:0
-MU:1
-//AN:
 
 //Depending Parameter
 HS:30//When HM
@@ -21,6 +28,3 @@ HF:0//When HM
 //LL:
 //RL:
 //SKIP:
-
-
-

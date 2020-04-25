@@ -1,0 +1,23 @@
+//System Paramter
+AO:0
+SO:1
+AT:IOC
+
+//Neccessary Paramter
+INAME:EIN
+ONAME:EOUT
+ISI:AUTO
+OSI:AUTO
+//TOP:
+
+//Unneccesary Parameter
+//LIGHT:
+//DUST:
+//SHUTTER:
+//RED:
+//GREEN:
+//YELLOW:
+//BUZZ:
+//ION:
+//MOTOR:
+//EMG:
