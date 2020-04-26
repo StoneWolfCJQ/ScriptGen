@@ -1,5 +1,5 @@
 GLOBAL STATIC REAL &CompRepeat
-ErrorCompDataAxis#AxisNo#(100),
+ErrorCompDataAxis#AxisNo#(@CND),
 &
 
 

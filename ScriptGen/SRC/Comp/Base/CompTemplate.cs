@@ -31,19 +31,20 @@ namespace ScriptGen
             Dictionary<string, string> source, 
             ref CompInfoTemp output)
         {
-            foreach (var kv in source)
-            {
-                DictionaryFunctions.AddOnlyNewPair(kv, output.content);
-                foreach (var dt in output.contents)
-                {
-                    DictionaryFunctions.AddOnlyNewPair(kv, dt);
-                }
-            }
+            FillContent(source, ref output);
             if (Type != ACSStr)
             {
                 output.axisStart = axisIndex;
                 output.axisOccupied = GetAO(source, output);
                 axisIndex += output.axisOccupied;
+            }
+        }
+
+        protected virtual void FillContent(Dictionary<string, string> source, ref CompInfoTemp output)
+        {
+            foreach (var kv in source)
+            {
+                DictionaryFunctions.AddOnlyNewPair(kv, output.content);
             }
         }
 
@@ -55,6 +56,15 @@ namespace ScriptGen
             WriteLaser(c, scriptNo[ST.LASER][0], ref scripts);
             WriteAuto(c, scriptNo[ST.AUTO][0], ref scripts);
             WriteDBuffer(c, ref scripts);
+        }
+
+        public virtual void FillContentFromDefLine(CompInfoTemp t, string defLine)
+        {
+            Dictionary<string, string> dt = RegFunctions.GetDefLineDict(defLine);
+            foreach (var kv in dt)
+            {
+                DictionaryFunctions.AddPair(kv, t.content);
+            }
         }
 
         protected virtual bool IsSkip(CompInfoTemp c)

@@ -22,6 +22,7 @@ HF:0//When HM!=D
 //HG://When HM!=D
 //CS://When CN=1
 //CT://When CN=1
+CND:100//When CN=1
 
 //Unneccesary Parameter
 //HP:

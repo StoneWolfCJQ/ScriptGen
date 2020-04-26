@@ -1,13 +1,12 @@
 !---------------------Compensating Script
+AUTOEXEC:
 &CompRepeat
 AxisComp#AxisNo#:
-ERRORUNMAP #AxisNo#, 0
 !---DataArea
+!ErrorCompDataAxis#AxisNo#(0)=...
+!...
+!---DataArea       
 
-!---DataArea         
-ERRORMAP1D #AxisNo#, 0, @CS, @CT, ErrorCompDataAxis#AxisNo#
-ERRORMAPON #AxisNo#, 0
+
+&  
 STOP
-
-
-&

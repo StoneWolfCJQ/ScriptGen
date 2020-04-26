@@ -10,14 +10,21 @@ namespace ScriptGen
     {
         public override string Type { get { return "ACS"; } }
 
+        protected override void FillContent(Dictionary<string, string> source, ref CompInfoTemp output)
+        {
+            output.contents = (from dict in output.contents
+                          from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
+                          let ndict = new Dictionary<string, string>(dict)
+                          group ndict by n into gdict orderby gdict.Key
+                          let rdict = AggregateDicts(gdict).Concat(source)
+                          .GroupBy(d=>d.Key)
+                          .ToDictionary(d=>d.Key, d=>d.First().Value)
+                          select rdict).ToList();
+            output.content = output.contents[0];
+        }
+
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
-            c.contents = (from dict in c.contents
-                          from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
-                          let ndict=new Dictionary<string, string>(dict)
-                          group ndict by n into gdicts orderby gdicts.Key
-                          let rdict = ReplaceAxisNo(gdicts.Last(), gdicts.Key)
-                          select rdict).ToList();
             foreach (var content in c.contents)
             {
                 c.content = content;
@@ -67,10 +74,16 @@ namespace ScriptGen
             base.WriteAuto(c, autoBufferNo, ref scripts);
         }
 
-        protected virtual Dictionary<string, string> ReplaceAxisNo(Dictionary<string, string> dict, int axisNo)
+        protected virtual Dictionary<string, string> AggregateDicts(IGrouping<int, Dictionary<string, string>> gdict)
         {
-            dict[KeyWordDef.AN] = axisNo.ToString();
-            return dict;
+            string axisNo = gdict.Key.ToString();
+            Dictionary<string, string> ndict = new Dictionary<string, string>();
+            foreach (var dt in gdict)
+            {
+                ndict = ndict.Concat(dt).GroupBy(d => d.Key).ToDictionary(d => d.Key, d => d.Last().Value);
+            }
+            ndict[KeyWordDef.AN] = axisNo.ToString();
+            return ndict;
         }
 
         protected virtual void CheckAxisNo(CompInfoTemp c)
@@ -79,6 +92,12 @@ namespace ScriptGen
             {
                 throw new Exception($"{c.rname}轴号{c.content[KeyWordDef.AN]}超限");
             }
+        }
+
+        public override void FillContentFromDefLine(CompInfoTemp t, string s)
+        {
+            Dictionary<string, string> dt = RegFunctions.GetDefLineDict(s);
+            t.contents.Add(dt);
         }
     }
 }

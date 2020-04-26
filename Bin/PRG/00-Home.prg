@@ -4,7 +4,6 @@ INT nAxis
 REAL safePos
 INT onLimit
 INT ZAxisNo
-!!---------------Index folloing para
 REAL homeOffset
 
 !---------------------Custom Functions Here
@@ -46,10 +45,9 @@ call #HomingMethod#
 
 
 &
-&CompRepeat
-TILL ^PST(#BCNo#).#RUN
-Start #BCNo#, AxisComp#AxisNo#
-WAIT 100
+&CompRepeat        
+ERRORMAP1D #AxisNo#, 0, @CS, @CT, ErrorCompDataAxis#AxisNo#
+ERRORMAPON #AxisNo#, 0
 
 
 &

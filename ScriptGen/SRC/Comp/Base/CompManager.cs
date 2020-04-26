@@ -14,6 +14,7 @@ namespace ScriptGen
             new EC(),
             new ACSAxis(),
             new CANAxis(),
+            new LCM(),
         };
 
         static Dictionary<ST, List<int>> scriptNo;
@@ -30,6 +31,11 @@ namespace ScriptGen
         public void FillAllAxisAndContent(ref int axisIndex, Dictionary<string, string> source, ref CompInfoTemp output)
         {
             GetCompFromType(source[KeyWordDef.AT]).FillAllAxisAndContent(ref axisIndex, source, ref output);
+        }
+
+        public void FillContentFromDefLine(CompInfoTemp t, string defLine, string type)
+        {
+            GetCompFromType(type).FillContentFromDefLine(t, defLine);
         }
 
         public string GenerateScript(Dictionary<ST, string> STContent, List<CompInfoTemp> topoList)
@@ -182,5 +188,7 @@ namespace ScriptGen
         public const string SKIP = "SKIP";
         public const string LL = "LL";
         public const string RL = "RL";
+        public const string LM = "LM";
+        public const string CND = "CND";
     }
 }

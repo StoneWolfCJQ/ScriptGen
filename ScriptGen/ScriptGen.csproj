@@ -57,6 +57,7 @@
     <Compile Include="SRC\Comp\Derived\EC\EC.cs" />
     <Compile Include="SRC\Comp\Derived\IO\IOCoupler.cs" />
     <Compile Include="SRC\Comp\Base\CompTemplate.cs" />
+    <Compile Include="SRC\Comp\Derived\LASER\LCM.cs" />
     <Compile Include="SRC\Util\DictionaryFunctions.cs" />
     <Compile Include="SRC\Util\RegFunctions.cs" />
     <Compile Include="SRC\Util\TextFunctions.cs" />

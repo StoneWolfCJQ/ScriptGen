@@ -89,6 +89,7 @@ namespace ScriptGen
                     {"#BCNo#", compBufferNo.ToString()},
                     {"@CS", c.content[KeyWordDef.CS]},
                     {"@CT", c.content[KeyWordDef.CT]},
+                    {"@CND", c.content[KeyWordDef.CND] },
                 }
             };
             string repeatKeyWord = "CompRepeat";

@@ -3,3 +3,5 @@ AO:4
 SO:1
 AT:LCM
 
+//Neccessary Parameter
+LM:FIXED_FREQ
