@@ -3,7 +3,7 @@ AO:4
 SO:1
 AT:ACS
 
-//Neccessary Parameter
+//Necessary Parameter
 CN:0
 MU:0
 //AN:
@@ -17,11 +17,9 @@ HF:0//When HM!=D
 //CT://When CN=1
 CND:100//When CN=1
 
-//Unneccesary Parameter
+//Unnecesary Parameter
 //HP:
 //LL:
 //RL:
 //SKIP:
 //NAME:
-
-

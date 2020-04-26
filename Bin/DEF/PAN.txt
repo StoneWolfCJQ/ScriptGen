@@ -3,7 +3,7 @@ AO:1
 SO:1
 AT:CAN
 
-//Neccessary Paramter
+//Necessary Paramter
 SD:5
 PS:8388608
 TARGRAD:0.01	
@@ -24,7 +24,7 @@ HF:0//When HM!=D
 //CT://When CN=1
 CND:100//When CN=1
 
-//Unneccesary Parameter
+//Unnecesary Parameter
 //HP:
 //LL:
 //RL:

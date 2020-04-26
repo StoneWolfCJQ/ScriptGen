@@ -15,6 +15,7 @@ namespace ScriptGen
             new ACSAxis(),
             new CANAxis(),
             new LCM(),
+            new General(),
         };
 
         static Dictionary<ST, List<int>> scriptNo;
@@ -99,7 +100,7 @@ namespace ScriptGen
             li.Sort();
             for (int i = 0; i < li.Count -1; i++)
             {
-                if (li[i] > 31 || li[i] < 0)
+                if (li[i] > 63 || li[i] < 0)
                 {
                     throw new Exception("Buffer号超出上下界");
                 }

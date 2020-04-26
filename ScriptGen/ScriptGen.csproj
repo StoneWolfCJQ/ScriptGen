@@ -51,6 +51,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SRC\Comp\Base\CompManager.cs" />
+    <Compile Include="SRC\Comp\Derived\General\General.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\CANAxis.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\ACSAxis.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\CommonAxis.cs" />

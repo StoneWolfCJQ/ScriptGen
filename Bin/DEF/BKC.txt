@@ -3,14 +3,14 @@ AO:0
 SO:1
 AT:IOC
 
-//Neccessary Paramter
+//Necessary Paramter
 INAME:EIN
 ONAME:EOUT
 ISI:AUTO
 OSI:AUTO
 //TOP:
 
-//Unneccesary Parameter
+//Unnecesary Parameter
 //LIGHT:
 //DUST:
 //SHUTTER:

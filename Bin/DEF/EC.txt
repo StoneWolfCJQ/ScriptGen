@@ -3,7 +3,7 @@ AO:0
 SO:0
 AT:EC
 
-//Neccessary Paramter
+//Necessary Paramter
 //BH:
 //BC:
 //BL:
