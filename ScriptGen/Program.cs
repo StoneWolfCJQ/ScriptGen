@@ -35,6 +35,7 @@ namespace ScriptGen
                         {
                             File.Create(name).Close();
                             File.WriteAllText(name, prg);
+                            Console.WriteLine($"写入{name}成功");
                         }
                         else
                         {

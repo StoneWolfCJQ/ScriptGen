@@ -13,13 +13,13 @@ namespace ScriptGen
         protected override void FillContent(Dictionary<string, string> source, ref CompInfoTemp output)
         {
             output.contents = (from dict in output.contents
-                          from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
-                          let ndict = new Dictionary<string, string>(dict)
-                          group ndict by n into gdict orderby gdict.Key
-                          let rdict = AggregateDicts(gdict).Concat(source)
-                          .GroupBy(d=>d.Key)
-                          .ToDictionary(d=>d.Key, d=>d.First().Value)
-                          select rdict).ToList();
+                               from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
+                               let ndict = new Dictionary<string, string>(dict)
+                               group ndict by n into gdict orderby gdict.Key
+                               let rdict = AggregateDicts(gdict).Concat(source)
+                                                                .GroupBy(d=>d.Key)
+                                                                .ToDictionary(d=>d.Key, d=>d.First().Value)
+                               select rdict).ToList();
             output.content = output.contents[0];
         }
 

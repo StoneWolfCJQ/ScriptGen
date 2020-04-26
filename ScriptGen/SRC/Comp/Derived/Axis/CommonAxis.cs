@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace ScriptGen
 {
     class CommonAxis:CompTemplate
     {
         public override bool IsMainController { get { return false; } }
+        protected static List<string> nameList;
+
+        public CommonAxis()
+        {
+            nameList = new List<string>();
+        }
 
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
@@ -51,7 +58,8 @@ namespace ScriptGen
                     {"@HP", c.content.ContainsKey(KeyWordDef.HP)? c.content[KeyWordDef.HP] : "0" },
                     {"@HF", c.content[KeyWordDef.HF] },
                     {"#HomingMethod#", HM },
-                    {"#GoSafe#" , c.content.ContainsKey(KeyWordDef.HP)? "" : "!"}
+                    {"#GoSafe#" , c.content.ContainsKey(KeyWordDef.HP)? "" : "!" },
+                    {"#NAME#", GetAxisName(c) },
                 }
             };
             string repeatKeyWord = "HomeRepeat";
@@ -90,6 +98,7 @@ namespace ScriptGen
                     {"@CS", c.content[KeyWordDef.CS]},
                     {"@CT", c.content[KeyWordDef.CT]},
                     {"@CND", c.content[KeyWordDef.CND] },
+                    {"#NAME#", GetAxisName(c, false) },
                 }
             };
             string repeatKeyWord = "CompRepeat";
@@ -99,6 +108,28 @@ namespace ScriptGen
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, compDictList, index, count);
             index = CompManager.GetBufferIndex(ST.DEF, scripts);
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, compDictList, index);
+        }
+
+        protected virtual string GetAxisName(CompInfoTemp c, bool check = true)
+        {
+            if (c.content.TryGetValue(KeyWordDef.NAME, out string name))
+            {
+                if (!Regex.IsMatch(name, @"^\w+$") || Regex.IsMatch(name, @"^Axis\d+$"))
+                {
+                    throw new Exception($"轴名称非法{name}");
+                }
+            }
+            else
+            {
+                name = $"Axis{GetAxisNo(c)}";                             
+            }
+
+            if (nameList.Contains(name) && check)
+            {
+                throw new Exception($"轴名称重复{name}");
+            }
+            nameList.Add(name);
+            return name;
         }
 
         protected override void WriteLaser(CompInfoTemp c, int laserBufferNo, ref string scripts)

@@ -34,6 +34,7 @@ Main:
 
 !--------------Axis Set And Process
 &HomeRepeat
+!#NAME#
 nAxis=#AxisNo#
 dfSpeed=@HS
 safePos=@HP
@@ -45,8 +46,8 @@ call #HomingMethod#
 
 
 &
-&CompRepeat        
-ERRORMAP1D #AxisNo#, 0, @CS, @CT, ErrorCompDataAxis#AxisNo#
+&CompRepeat    
+ERRORMAP1D #AxisNo#, 0, @CS, @CT, ErrorCompData#NAME#
 ERRORMAPON #AxisNo#, 0
 
 
