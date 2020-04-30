@@ -11,19 +11,34 @@ namespace ScriptGen
 {
     static class TextFunctions
     {
-        public static void ReplaceSingle(ref string source, Dictionary<string, string> map, int startIndex = 0)
+        public static Dictionary<string, string> subStrList = new Dictionary<string, string>()
+        {
+            {"$","&" },
+        };
+
+        public static List<string> trimList = new List<string>()
+        {
+            ",",
+            @"\$"
+        };
+
+        public static void ReplaceSingle(ref string source, Dictionary<string, string> map,
+            int startIndex = 0, int count = int.MaxValue)
         {
             foreach (var kv in map)
             {
-                ReplaceSingle(ref source, kv.Key, kv.Value, startIndex);
+                ReplaceSingle(ref source, kv.Key, kv.Value, startIndex, count);
             }
         }
 
-        public static void ReplaceSingle(ref string source, string oldStr, string newStr, int startIndex = 0)
+        public static void ReplaceSingle(ref string source, string oldStr, string newStr, 
+            int startIndex = 0, int count = int.MaxValue)
         {
-            string s = source.Substring(startIndex);
+            count = Utils.GetCount(source, startIndex, count);
+            string s = source.Substring(startIndex, count);
             s = s.Replace("@@" + oldStr, newStr);
-            source = source.Substring(0, startIndex) + s;
+            source = source.Substring(0, startIndex) + s + 
+                source.Substring(startIndex + count, source.Length - startIndex - count);
         }
 
         public static void AppendMultiNoRepeat(ref string source, Dictionary<string, string> map, int startIndex = 0)
@@ -142,10 +157,22 @@ namespace ScriptGen
             return input;
         }
 
-        public static string TrimComma(string input)
+        public static string TrimStrInList(string input)
         {
-            string s = Regex.Replace(input, @",(?=\s*(\r|\n))", "");
-            return s;
+            foreach (string s in trimList)
+            {
+                input = Regex.Replace(input, s + @"(?=\s*(\r|\n))", "");
+            }
+            return input;
+        }
+
+        public static string SubSpecial(string input)
+        {
+            foreach (var kv in subStrList)
+            {
+                input = input.Replace(kv.Key, kv.Value);
+            }
+            return input;
         }
 
         static string GetWholeLine(string source, int index)

@@ -64,6 +64,7 @@
     <Compile Include="SRC\Util\TextFunctions.cs" />
     <Compile Include="SRC\Util\Definitions.cs" />
     <Compile Include="SRC\MainHandler.cs" />
+    <Compile Include="SRC\Util\Utils.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -11,15 +11,21 @@ namespace ScriptGen
     {
         public override bool IsMainController { get { return false; } }
         protected static List<string> nameList;
+        protected static Dictionary<int, List<int>> homeSZDict;
 
         public CommonAxis()
         {
             nameList = new List<string>();
+            homeSZDict = new Dictionary<int, List<int>>();
         }
 
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
             string CHM = c.content[KeyWordDef.HM];
+            int HG = GetHomeBufferNo(c, homeBufferNo);
+            int HGIndex = GetHomeIndex(c, homeBufferNo, scripts);
+            int count = GetHomeCount(c, homeBufferNo, scripts);
+            TextFunctions.ReplaceSingle(ref scripts, "BH", HG.ToString(), HGIndex, count);
 
             if (CHM.Contains("D"))
             { 
@@ -46,9 +52,6 @@ namespace ScriptGen
                 HM += "I";
             }
 
-            int HGIndex = GetHomeIndex(c, homeBufferNo, scripts);
-            int count = GetHomeCount(c, homeBufferNo, scripts);
-
             List<Dictionary<string, string>> homeDictList = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>()
@@ -65,6 +68,11 @@ namespace ScriptGen
             string repeatKeyWord = "HomeRepeat";
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, homeDictList, HGIndex, count);
 
+            if (CHM.Contains("Z") || c.content.ContainsKey(KeyWordDef.SZ))
+            {
+                TextFunctions.ReplaceSingle(ref scripts, "ZLimitSafeLine__", "", HGIndex, count);
+            }
+
             if (CHM.Contains("Z"))
             {
                 homeDictList = new List<Dictionary<string, string>>()
@@ -72,10 +80,34 @@ namespace ScriptGen
                     new Dictionary<string, string>()
                     {
                         {"#AxisNo#", GetAxisNo(c).ToString()},
+                        {"@BH", HG.ToString()},
                     }
                 };
                 repeatKeyWord = "ZAxisSafeRepeat";
                 TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, homeDictList, HGIndex, count);
+                repeatKeyWord = "ZLimitSafeRepeat";
+                TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, homeDictList, HGIndex, count);
+            }
+
+            if (c.content.ContainsKey(KeyWordDef.SZ))
+            {
+                List<int> li = MainHandler.GetAxisNoByCompName(c.content[KeyWordDef.SZ]);
+                List<Dictionary<string, string>> SZDictList = new List<Dictionary<string, string>>();
+                foreach(int i in li)
+                {
+                    if (!DictionaryFunctions.GetValueOrAddNewKey(homeSZDict, HG, new List<int>())
+                        .Contains(i))
+                    {
+                        homeSZDict[HG].Add(i);
+                        SZDictList.Add(new Dictionary<string, string>()
+                        {
+                            {"#AxisNo#", i.ToString()},
+                            {"@BH", HG.ToString()},
+                        });
+                    }
+                }
+                repeatKeyWord = "ZLimitSafeRepeat";
+                TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, SZDictList, HGIndex, count);
             }
         }
 
@@ -191,8 +223,7 @@ namespace ScriptGen
 
         protected virtual int GetAxisNo(CompInfoTemp c)
         {
-            int an = c.axisStart + int.Parse(c.content[KeyWordDef.AN]);
-            return an;
+            return c.axisStart;
         }
     }
 }

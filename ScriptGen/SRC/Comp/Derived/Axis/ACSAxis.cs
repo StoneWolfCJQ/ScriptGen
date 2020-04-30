@@ -12,8 +12,16 @@ namespace ScriptGen
 
         protected override void FillContent(Dictionary<string, string> source, ref CompInfoTemp output)
         {
+            string v;
+            string name = output.rname;
+            if (output.contents.Count == 0)
+            {
+                output.contents.Add(source);
+            }
             output.contents = (from dict in output.contents
-                               from n in dict[KeyWordDef.AN].Split(',').Select(i => int.Parse(i))
+                               let t = dict.TryGetValue(KeyWordDef.AN, out v) ? v : 
+                                       DictionaryFunctions.GetValueOrThrowException(name, source, KeyWordDef.AN)
+                               from n in t.Split(',').Select(i => int.Parse(i))
                                let ndict = new Dictionary<string, string>(dict)
                                group ndict by n into gdict orderby gdict.Key
                                let rdict = AggregateDicts(gdict).Concat(source)
@@ -98,6 +106,12 @@ namespace ScriptGen
         {
             Dictionary<string, string> dt = RegFunctions.GetDefLineDict(s);
             t.contents.Add(dt);
+        }
+
+        protected override int GetAxisNo(CompInfoTemp c)
+        {
+            int an = c.axisStart + int.Parse(c.content[KeyWordDef.AN]);
+            return an;
         }
     }
 }

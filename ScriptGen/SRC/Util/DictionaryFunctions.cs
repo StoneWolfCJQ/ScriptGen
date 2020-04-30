@@ -36,16 +36,27 @@ namespace ScriptGen
             }
         }
 
-        public static T2 GetValue<T1,T2>(Dictionary<T1, T2>d, T1 key, out bool keyExists)
+        public static T2 GetValueOrThrowException<T1, T2>(string info, Dictionary<T1, T2> d, T1 key)
         {
             if (d.ContainsKey(key))
             {
-                keyExists = true;
                 return d[key];
             }
 
-            keyExists = false;
-            return (T2)Convert.ChangeType(null, typeof(T2));
+            throw new Exception($"无法获取{info}键值：{key}");
+        }
+
+        public static T2 GetValueOrAddNewKey<T1, T2>(Dictionary<T1, T2> d, T1 key, T2 newValue)
+        {
+            try
+            {
+                GetValueOrThrowException("", d, key);
+            }
+            catch
+            {
+                d.Add(key, newValue);
+            }
+            return d[key];
         }
     }
 }

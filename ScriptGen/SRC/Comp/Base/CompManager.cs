@@ -192,5 +192,6 @@ namespace ScriptGen
         public const string LM = "LM";
         public const string CND = "CND";
         public const string NAME = "NAME";
+        public const string SZ = "SZ";
     }
 }

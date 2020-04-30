@@ -9,9 +9,12 @@ REAL homeOffset
 !---------------------Custom Functions Here
 !!---------------SafeCheck: Z Goto RLimit   
 SafeCheck:
-	HALT #ALL#
-&SafeRepeat
+&SafeBufferRepeat
 	STOP #BufferNo#
+
+&
+&SafeBufferRepeat
+	HALT #AxisNo#
 
 &
 &ZAxisSafeRepeat
@@ -19,11 +22,27 @@ SafeCheck:
 	CALL ZAxisSafe
 
 &
-&BufferRepeat
+&SafeBufferRepeat
 	IF ^PST(#BufferNo#).#RUN
 		Start #BufferNo#, 1
 	END
 &
+	GLOBAL INT ZL@@BH(200)
+	@@ZLimitSafeLine__WHILE (1)
+&ZLimitSafeRepeat
+		IF FAULT(#AxisNo#).#RL = 1
+			ZL@BH(#AxisNo#) = 1
+		END
+
+&
+	@@ZLimitSafeLine__	IF &ZLimitSafeRepeat
+	ZL@BH(#AxisNo#) = 1 $ 
+&
+
+	@@ZLimitSafeLine__		GOTO Main
+	@@ZLimitSafeLine__	END
+	@@ZLimitSafeLine__END
+
 
 
 !---------------------Homing Process
@@ -174,8 +193,5 @@ RET
 !!--------Z Axis Go Right
 ZAxisSafe:
 	ENABLE (ZAxisNo)
-	IF ^FAULT(ZAxisNo).#RL
-		JOG/v ZAxisNo, 10
-		TILL FAULT(ZAxisNo).#RL
-	END
+	JOG/v ZAxisNo, 10
 RET

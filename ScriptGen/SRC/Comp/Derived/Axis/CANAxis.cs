@@ -22,10 +22,5 @@ namespace ScriptGen
 
             base.WriteAuto(c, autoBufferNo, ref scripts);
         }
-
-        protected override int GetAxisNo(CompInfoTemp c)
-        {
-            return c.axisStart;
-        }
     }
 }

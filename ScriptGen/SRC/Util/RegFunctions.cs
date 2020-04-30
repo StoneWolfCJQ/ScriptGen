@@ -13,10 +13,12 @@ namespace ScriptGen
     {
         public const string defaultReg = @"(?<=^|\r\n)(\w{2,})\:([^(\@\/\s)]+)(?=(((\/\/)+(\d\D)*)|\s*|$))";
         public const string defLineReg = @"(?<=\@)(\w{2,})\:([^\@\/\s]+)(?=\@|$)";
-        public const string topoReg = @"(?i)(?<=\@)([a-z]{2,})\:?([^\@\/\s]+)?(?=\@|$)";
-        public const string compBaseInfoReg = @"^(?i)[a-z]{2,}\@";
+        public const string topoReg = @"(?i)(?<=\@)([a-z_]{2,})\:?([^\@\/\s]+)?(?=\@|$)";
+        public const string compBaseInfoReg = @"^(?i)[a-z_]{2,}\@";
         public const string repeatRegTail = @"\s*[\r|\n][^&]+[\r|\n]\s*&\s*?\r\n";
-        public const string compCustomReg = @"^(?i)([a-z]{2,})((\d+,)*\d+)((@[^@]+)+)$";
+        public const string compCustomReg = @"^(?i)([a-z_]{2,})((\d+,)*\d+)((@[^@]+)+)$";
+        public const string defLineCommentReg = @"((^\s*(\/\/))|(^\s+$))";
+        public const string listSplitReg = @"(?i)([a-z_]{2,})(\d+(\.\d+)?(,\d+(\.\d+)?)*)";
 
         public static Dictionary<string, string> GetDictFromReg(string input, string pattern)
         {
@@ -78,6 +80,21 @@ namespace ScriptGen
         {
             bool b = Regex.IsMatch(input, compBaseInfoReg);
             return b;
+        }
+
+        public static List<string> SplitToListByComma(string input)
+        {
+            List<string> li = new List<string>();
+            MatchCollection mc = Regex.Matches(input, listSplitReg);
+            foreach (Match m in mc)
+            {
+                foreach(string s in m.Groups[2].Value.Split(",".ToArray()
+                    , StringSplitOptions.RemoveEmptyEntries))
+                {
+                    li.Add(m.Groups[1].Value + s);
+                }
+            }
+            return li;
         }
     }
 }
