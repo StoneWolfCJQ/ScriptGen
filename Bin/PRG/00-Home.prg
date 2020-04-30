@@ -28,6 +28,7 @@ SafeCheck:
 	END
 &
 	GLOBAL INT ZL@@BH(200)
+	FILL(0, ZL@@BH, 0, 199)
 	@@ZLimitSafeLine__WHILE (1)
 &ZLimitSafeRepeat
 		IF FAULT(#AxisNo#).#RL = 1
@@ -36,14 +37,12 @@ SafeCheck:
 
 &
 	@@ZLimitSafeLine__	IF &ZLimitSafeRepeat
-	ZL@BH(#AxisNo#) = 1 $ 
+ZL@BH(#AxisNo#) = 1 $ 
 &
 
 	@@ZLimitSafeLine__		GOTO Main
 	@@ZLimitSafeLine__	END
 	@@ZLimitSafeLine__END
-
-
 
 !---------------------Homing Process
 !!---------------Some Encoders Are Absolute

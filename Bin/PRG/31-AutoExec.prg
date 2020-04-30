@@ -20,6 +20,7 @@ IOConfig:
 AxisConfig:
 &CANRepeat
 	AxisNo=#AxisNo#
+	DISABLE AxisNo
 	EFAC(AxisNo)=@SD/@PS
 	MFLAGS(AxisNo).#INVENC=@INV		
 	TARGRAD(AxisNo)=@TARGRAD
