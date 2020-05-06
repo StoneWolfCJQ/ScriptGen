@@ -70,26 +70,62 @@ namespace ScriptGen
                 throw new Exception("首行不是拓补定义");
             }
             List<CompInfoTemp> topoList = new List<CompInfoTemp>();
-            Dictionary<string, int> compNumDict = new Dictionary<string, int>();
+            Dictionary<string, int> compMaxNumDict = new Dictionary<string, int>();
+            Dictionary<string, List<int>> checkNumDict = new Dictionary<string, List<int>>();
             foreach (var kv in strDict)
             {
+                List<int> compNumList = new List<int>();
+                string compName = kv.First().Key;
+                string sv = kv.First().Value;
                 int i;
-                if (compNumDict.ContainsKey(kv.First().Key))
+                DictionaryFunctions.GetValueOrAddNewKey(checkNumDict, compName, new List<int>());
+                if (sv.Contains('$'))
                 {
-                    i = compNumDict[kv.First().Key] + 1;
-                    compNumDict[kv.First().Key] += int.Parse(kv.First().Value);
+                    List<int> li;
+                    try
+                    {
+                        li = sv.Split('$')[1].Split(',').Select(s => int.Parse(s)).ToList();
+                    }
+                    catch
+                    {
+                        throw new Exception($"无效值{compName}:{sv}");
+                    }
+                    int num = int.TryParse(sv.Split('$')[0], out num) ? num : li.Count;
+                    for (i = 1; i <= num; i++)
+                    {
+                        if (i <= li.Count)
+                        {
+                            compNumList.Add(li[i - 1]);
+                        }
+                        else
+                        {
+                            compNumList.Add(li.Last() + i - li.Count);
+                        }
+                    }
                 }
                 else
                 {
-                    i = 1;
-                    compNumDict.Add(kv.First().Key, int.Parse(kv.First().Value));
+                    int value = int.Parse(kv.First().Value);
+                    i = DictionaryFunctions.GetValueOrAddNewKey(compMaxNumDict, compName, 0) + 1;
+                    compMaxNumDict[compName] += value;
+                    for (; i <= compMaxNumDict[compName]; i++)
+                    {
+                        compNumList.Add(i);
+                    }
                 }
-                for (; i <= compNumDict[kv.First().Key]; i++) 
+                ;
+                foreach(int j in compNumList)
                 {
+                    i = j;
+                    if (checkNumDict[compName].Contains(i))
+                    {
+                        throw new Exception($"重复编号{compName}:{i}");
+                    }
+                    checkNumDict[compName].Add(i);
                     CompInfoTemp temp = new CompInfoTemp() 
                     {
-                        rname = kv.First().Key + i.ToString(),
-                        gname = kv.First().Key,
+                        rname = compName + i.ToString(),
+                        gname = compName,
                     };
                     topoList.Add(temp);
                 }
@@ -111,7 +147,7 @@ namespace ScriptGen
                     {
                         foreach (var kv in d2)
                         {
-                            DictionaryFunctions.AddPair(kv, d);
+                            DictionaryFunctions.AddOrUpdatePair(kv, d);
                         }
                         defaultDict[s] = d;
                     }

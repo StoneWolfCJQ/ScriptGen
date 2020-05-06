@@ -16,7 +16,7 @@ namespace ScriptGen
             return !((d == null) || (d.Keys.Count == 0));
         }
 
-        public static void AddPair<T1,T2>(KeyValuePair<T1,T2> kv, Dictionary<T1,T2> d)
+        public static void AddOrUpdatePair<T1,T2>(KeyValuePair<T1,T2> kv, Dictionary<T1,T2> d)
         {
             if (d.ContainsKey(kv.Key))
             {
@@ -28,7 +28,7 @@ namespace ScriptGen
             }
         }
 
-        public static void AddOnlyNewPair<T1, T2>(KeyValuePair<T1, T2> kv, Dictionary<T1, T2> d)
+        public static void AddPair<T1, T2>(KeyValuePair<T1, T2> kv, Dictionary<T1, T2> d)
         {
             if (!d.ContainsKey(kv.Key))
             {

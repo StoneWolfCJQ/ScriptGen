@@ -44,7 +44,7 @@ namespace ScriptGen
         {
             foreach (var kv in source)
             {
-                DictionaryFunctions.AddOnlyNewPair(kv, output.content);
+                DictionaryFunctions.AddPair(kv, output.content);
             }
         }
 
@@ -63,7 +63,7 @@ namespace ScriptGen
             Dictionary<string, string> dt = RegFunctions.GetDefLineDict(defLine);
             foreach (var kv in dt)
             {
-                DictionaryFunctions.AddPair(kv, t.content);
+                DictionaryFunctions.AddOrUpdatePair(kv, t.content);
             }
         }
 
