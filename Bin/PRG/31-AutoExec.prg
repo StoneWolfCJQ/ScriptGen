@@ -40,28 +40,34 @@ Call CommutProcess
 !!---------------While Loop
 INT EONCE;EONCE=1
 INT EMG
+INT COUNT;COUNT=0
 @LIGHT=1
 Unstop:
 	WHILE 1		
         EMG=9
 		!EMG Function
 		IF @@EMG=0
+		    COUNT=COUNT+1
 			KILL ALL		
-			@MOTOR=0
-			@DUST=0
-			@SHUTTER=0
-			@RED=1
-			@BUZZ=1
-			@DOOR=0
-			@ION=0
+			@MOTOR=0!MOTOR
+			@DUST=0!DUST
+			@SHUTTER=0!SHUTTER
+			@RED=1!RED
+			@GREEN=0!GREEN
+			@DOOR=0!DOOR
+			@ION=0!ION
+			IF COUNT = 1
+				@BUZZ=1!BUZZ
+			END	
 		    HALT ALL
 			DISABLE ALL
 			EONCE=0
 		ELSE
 			IF EONCE=0
-				@RED=0
-				@BUZZ=0
+				@RED=0!RED
+				@BUZZ=0!BUZZ
 				EONCE=1
+				COUNT=0
 			END
 		END
 		CALL LimitDetect

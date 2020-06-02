@@ -76,8 +76,13 @@ namespace ScriptGen
                         {
                             if (s.IndexOf(oldStr) != -1)
                             {
-                                string sp = GetWholeLine(source, i).Replace('@' + oldStr, newStr);
-                                source = source.Insert(i + 2, sp + "\r\n");
+                                string sp = "";
+                                string wl = GetWholeLine(source, i);
+                                foreach (string ns in newStr.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    sp += wl.Replace('@' + oldStr, ns) + "\r\n";
+                                }
+                                source = source.Insert(i + 2, sp);
                             }
                             break;
                         }

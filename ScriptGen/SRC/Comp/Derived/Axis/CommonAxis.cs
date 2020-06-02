@@ -52,12 +52,15 @@ namespace ScriptGen
                 HM += "I";
             }
 
+            List<string> homeSpeedList = c.content[KeyWordDef.HS].Split(",".ToArray(), 
+                StringSplitOptions.RemoveEmptyEntries).ToList();
             List<Dictionary<string, string>> homeDictList = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string, string>()
                 {
                     {"#AxisNo#", GetAxisNo(c).ToString()},
-                    {"@HS", c.content[KeyWordDef.HS] },
+                    {"#NSpeed#", homeSpeedList[0] },
+                    {"#HSpeed#", homeSpeedList.Count > 1 ? homeSpeedList[1] : (int.Parse(homeSpeedList[0])/2).ToString()},
                     {"@HP", c.content.ContainsKey(KeyWordDef.HP)? c.content[KeyWordDef.HP] : "0" },
                     {"@HF", c.content[KeyWordDef.HF] },
                     {"#HomingMethod#", HM },

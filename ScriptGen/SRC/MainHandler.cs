@@ -188,8 +188,12 @@ namespace ScriptGen
             foreach (string s in input)
             {
                 CompInfoTemp t = topolist.Find(c => c.rname == s.Split('@')[0]);
+                if (t == null)
+                {
+                    continue;
+                }
                 string type = defaultDict[t.gname][KeyWordDef.AT];
-                if (t != null) 
+                if (t != null)
                 {
                     CManager.FillContentFromDefLine(t, s, type);
                 }
@@ -231,7 +235,14 @@ namespace ScriptGen
             {
                 string n = s.Split('.')[0];
                 string i = s.Split('.').Length > 1 ? s.Split('.')[1] : "0";
-                li.Add(gTopoList.Find(c => c.rname == s.Split('.')[0]).axisStart + int.Parse(i));
+                try
+                {
+                    li.Add(gTopoList.Find(c => c.rname == s.Split('.')[0]).axisStart + int.Parse(i));
+                }
+                catch
+                {
+                    continue;
+                }
             }
             return li;
         }
