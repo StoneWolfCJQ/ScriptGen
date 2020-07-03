@@ -19,6 +19,41 @@ namespace ScriptGen
         public const string compCustomReg = @"^(?i)([a-z_]{2,})((\d+,)*\d+)((@[^@]+)+)$";//检测元件申明PAN2,3正则
         public const string defLineCommentReg = @"((^\s*(\/\/))|(^\s+$))";//用户文件注释行正则
         public const string listSplitReg = @"(?i)([a-z_]{2,})(\d+(\.\d+)?(,\d+(\.\d+)?)*)";//用户元件参数类似PAN3,2,UDM2,3正则
+        public const string macroReg = @"\r?\nMACRO@([a-zA-Z]\w+):{([^{^}]+)}";//宏申明正则
+
+        public static List<string> GetAllMatches2List(string input, string pattern, int groupNo)
+        {
+            MatchCollection mc = Regex.Matches(input, pattern);
+            List<string> ls = new List<string>();
+            foreach (Match m in mc)
+            {
+                ls.Add(m.Groups[groupNo].Value);
+            }
+            return ls;
+        }
+
+        public static Dictionary<string, List<string>> GetMacroDictAndRemove(string input, out string output)
+        {
+            MatchCollection mc = Regex.Matches(input, macroReg);
+            output = Regex.Replace(input, macroReg, "");
+            Dictionary<string, List<string>> dl = new Dictionary<string, List<string>>();
+            foreach (Match m in mc)
+            {
+                string key = m.Groups[1].Value;
+                string value = m.Groups[2].Value;
+                try
+                {
+                    DictionaryFunctions.GetValueOrThrowException("", dl, m.Groups[1].Value);
+                    dl[key].Add(value);
+                }
+                catch
+                {
+                    dl.Add(key, new List<string>() { value });
+                }
+            }
+
+            return dl;
+        }
 
         public static Dictionary<string, string> GetDictFromReg(string input, string pattern)
         {

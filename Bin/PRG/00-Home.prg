@@ -123,7 +123,6 @@ L:
 	WAIT 200
 	HALT nAxis
 	TILL ^MST(nAxis).#MOVE
-	WAIT 100
 	
 	JOG/v nAxis, -HSpeed
 	TILL FAULT(nAxis).#LL $ ^MST(nAxis).#MOVE
@@ -131,7 +130,6 @@ L:
 	PTP/er nAxis, homeOffset
 	WAIT 200
 	SET FPOS(nAxis) = 0
-	WAIT 100
 RET
 
 !!--------No Index Home Reverse
@@ -148,7 +146,6 @@ R:
 	WAIT 200
 	HALT nAxis
 	TILL ^MST(nAxis).#MOVE
-	WAIT 100
 
 	JOG/v nAxis, HSpeed
 	TILL FAULT(nAxis).#RL $ ^MST(nAxis).#MOVE
@@ -156,7 +153,6 @@ R:
 	PTP/er nAxis, homeOffset
 	WAIT 200
 	SET FPOS(nAxis) = 0
-	WAIT 100
 RET
 
 !!--------Index Home

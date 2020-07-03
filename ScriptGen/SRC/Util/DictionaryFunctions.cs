@@ -28,7 +28,7 @@ namespace ScriptGen
             }
         }
 
-        public static void AddPair<T1, T2>(KeyValuePair<T1, T2> kv, Dictionary<T1, T2> d)
+        public static void UpdatePair<T1, T2>(KeyValuePair<T1, T2> kv, Dictionary<T1, T2> d)
         {
             if (!d.ContainsKey(kv.Key))
             {

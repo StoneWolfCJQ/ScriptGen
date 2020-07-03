@@ -44,7 +44,7 @@ namespace ScriptGen
         {
             foreach (var kv in source)
             {
-                DictionaryFunctions.AddPair(kv, output.content);
+                DictionaryFunctions.UpdatePair(kv, output.content);
             }
         }
 

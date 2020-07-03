@@ -22,15 +22,16 @@ namespace ScriptGen
         protected override void WriteHome(CompInfoTemp c, List<int> homeBufferNo, ref string scripts)
         {
             string CHM = c.content[KeyWordDef.HM];
+
+            if (CHM.Contains("D"))
+            {
+                return;
+            }
+
             int HG = GetHomeBufferNo(c, homeBufferNo);
             int HGIndex = GetHomeIndex(c, homeBufferNo, scripts);
             int count = GetHomeCount(c, homeBufferNo, scripts);
             TextFunctions.ReplaceSingle(ref scripts, "BH", HG.ToString(), HGIndex, count);
-
-            if (CHM.Contains("D"))
-            { 
-                return;
-            }
 
             string HM = "";
 
@@ -95,6 +96,10 @@ namespace ScriptGen
             if (c.content.ContainsKey(KeyWordDef.SZ))
             {
                 List<int> li = MainHandler.GetAxisNoByCompName(c.content[KeyWordDef.SZ]);
+                if (li.Count == 0)
+                {
+                    throw new Exception($"部件{c.rname}属性{KeyWordDef.SZ}错误：{c.content[KeyWordDef.SZ]}");
+                }
                 List<Dictionary<string, string>> SZDictList = new List<Dictionary<string, string>>();
                 foreach(int i in li)
                 {

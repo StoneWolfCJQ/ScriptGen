@@ -16,6 +16,7 @@ namespace ScriptGen
             new CANAxis(),
             new LCM(),
             new General(),
+            new MACRO(),
         };
 
         static Dictionary<ST, List<int>> scriptNo;

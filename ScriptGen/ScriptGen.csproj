@@ -26,7 +26,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,6 +59,7 @@
     <Compile Include="SRC\Comp\Derived\IO\IOCoupler.cs" />
     <Compile Include="SRC\Comp\Base\CompTemplate.cs" />
     <Compile Include="SRC\Comp\Derived\LASER\LCM.cs" />
+    <Compile Include="SRC\Comp\Derived\MACRO\MACRO.cs" />
     <Compile Include="SRC\Util\DictionaryFunctions.cs" />
     <Compile Include="SRC\Util\RegFunctions.cs" />
     <Compile Include="SRC\Util\TextFunctions.cs" />

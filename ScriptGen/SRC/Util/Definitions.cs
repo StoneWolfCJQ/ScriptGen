@@ -39,6 +39,7 @@ namespace ScriptGen
         public int slaveOccupied;
         public Dictionary<string, string> content;
         public List<Dictionary<string, string>> contents;
+        public object ocontent;
 
         public CompInfoTemp()
         {

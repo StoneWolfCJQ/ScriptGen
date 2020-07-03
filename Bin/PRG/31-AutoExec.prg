@@ -117,5 +117,7 @@ RET
 
 !!---------------For Safety
 SafeGuard:
-    !Optional: Set Speed
+&SAFE_MACRO
+#ITEM#
+&
 RET
