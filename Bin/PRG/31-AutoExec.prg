@@ -5,14 +5,12 @@ INT AxisNo
 !!---------------Input And Ouput Slave Index
 IOConfig:
 &IOINRepeat
-	ECIN(ECGETOFFSET("Input", #SlaveIndex#, 1), @INAME#IOIndexA#)
-	ECIN(ECGETOFFSET("Input", #SlaveIndex#, 1)+1, @INAME#IOIndexB#)
+	ECIN(ECGETOFFSET("Input", #SlaveIndex#, 1) + #NUM#, @INAME#IOIndex#)
 
 &
 
 &IOOUTRepeat
-	ECOUT(ECGETOFFSET("Output", #SlaveIndex#, 0), @ONAME#IOIndexA#)
-	ECOUT(ECGETOFFSET("Output", #SlaveIndex#, 0)+1, @ONAME#IOIndexB#)
+	ECOUT(ECGETOFFSET("Output", #SlaveIndex#, 0) + #NUM#, @ONAME#IOIndex#)
 
 &
 

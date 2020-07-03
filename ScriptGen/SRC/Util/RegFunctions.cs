@@ -17,7 +17,7 @@ namespace ScriptGen
         public const string compBaseInfoReg = @"^(?i)[a-z_]{2,}\@";//检测是否为元器件
         public const string repeatRegTail = @"\s*[\r|\n][^&]+[\r|\n]\s*&\s*?\r\n";//检测&...&正则
         public const string compCustomReg = @"^(?i)([a-z_]{2,})((\d+,)*\d+)((@[^@]+)+)$";//检测元件申明PAN2,3正则
-        public const string defLineCommentReg = @"((^\s*(\/\/))|(^\s+$))";//用户文件注释行正则
+        public const string defLineCommentReg = @"((\s*(\/\/)[\s\S]*$)|(^\s+$))";//用户文件注释行正则
         public const string listSplitReg = @"(?i)([a-z_]{2,})(\d+(\.\d+)?(,\d+(\.\d+)?)*)";//用户元件参数类似PAN3,2,UDM2,3正则
         public const string macroReg = @"\r?\nMACRO@([a-zA-Z]\w+):{([^{^}]+)}";//宏申明正则
 

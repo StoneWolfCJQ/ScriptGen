@@ -17,6 +17,7 @@ namespace ScriptGen
             new LCM(),
             new General(),
             new MACRO(),
+            new AIOCoupler(),
         };
 
         static Dictionary<ST, List<int>> scriptNo;

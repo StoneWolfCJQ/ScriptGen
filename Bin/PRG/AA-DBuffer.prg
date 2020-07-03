@@ -4,10 +4,10 @@ ErrorCompData#NAME#(@CND),
 
 
 GLOBAL INT &IOINRepeat
-@INAME#IOIndexA#, @INAME#IOIndexB#, 
+@INAME#IOIndex#, 
 &
 
 
 GLOBAL INT &IOOUTRepeat
-@ONAME#IOIndexA#, @ONAME#IOIndexB#, 
+@ONAME#IOIndex#, 
 &

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace ScriptGen
 {
-    class IOCoupler:CompTemplate
+    class AIOCoupler:CompTemplate
     {
-        public override string Type { get { return "IOC"; } }
+        public override string Type { get { return "AIOC"; } }
         public override bool IsMainController { get { return false; } }
         protected virtual string TopoReg { get { return @"(?i)([io])(\d+)"; } }
         protected virtual List<Dictionary<bool ,int>> TopoDict { get; set; }
@@ -17,7 +17,7 @@ namespace ScriptGen
         protected static int inputStartIndex;
         protected static int outputStartIndex;
 
-        public IOCoupler()
+        public AIOCoupler()
         {
             inputStartIndex = 0;
             outputStartIndex = 0;
@@ -27,10 +27,6 @@ namespace ScriptGen
         {
             int so = base.GetSO(d, output);
             ParseTopo(output.content.ContainsKey(KeyWordDef.TOP) ? output.content[KeyWordDef.TOP] : d[KeyWordDef.TOP]);
-            foreach (var dt in TopoDict)
-            {
-                so += dt.First().Value;
-            }
             return so;
         }
 
@@ -96,14 +92,18 @@ namespace ScriptGen
             string OKeyWord = "IOOUTRepeat";
             List<Dictionary<string, string>> IDictList = new List<Dictionary<string, string>>();
             List<Dictionary<string, string>> ODictList = new List<Dictionary<string, string>>();
-            int slaveIndex = c.slaveStart + 1;
+            int slaveIndex = c.slaveStart;
             int IIndex = GetIOStartIndex(true, c);
             int OIndex = GetIOStartIndex(false, c);
             foreach (var dt in TopoDict)
             {
                 int i = dt.First().Value;
                 bool isIn = dt.First().Key;
-                for (; i > 0; i--)
+                if (i % 8 != 0)
+                {
+                    throw new Exception($"部件{c.rname}属性错误：IO数目必须是8的整数倍");
+                }
+                for (int jj = 0; i > 0; i -= 8, jj++)
                 {
                     if (isIn)
                     {
@@ -112,16 +112,9 @@ namespace ScriptGen
                             {"#SlaveIndex#",slaveIndex.ToString() },
                             {"@INAME",c.content[KeyWordDef.INAME] },
                             {"#IOIndex#",IIndex.ToString()},
-                            {"#NUM#", "0" },
+                            {"#NUM#", jj.ToString() },
                         });
-                        IDictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@INAME",c.content[KeyWordDef.INAME] },
-                            {"#IOIndex#",(IIndex+1).ToString()},
-                            {"#NUM#", "1" },
-                        });
-                        IIndex += 2;
+                        IIndex += 1;
                         inputStartIndex = IIndex;
                     }
                     else
@@ -131,19 +124,11 @@ namespace ScriptGen
                             {"#SlaveIndex#",slaveIndex.ToString() },
                             {"@ONAME",c.content[KeyWordDef.ONAME] },
                             {"#IOIndex#",OIndex.ToString()},
-                            {"#NUM#", "0" },
+                            {"#NUM#", jj.ToString() },
                         });
-                        ODictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@ONAME",c.content[KeyWordDef.ONAME] },
-                            {"#IOIndex#",(OIndex+1).ToString() },
-                            {"#NUM#", "1" },
-                        });
-                        OIndex += 2;
+                        OIndex += 1;
                         outputStartIndex = OIndex;
                     }
-                    slaveIndex++;
                 }
             }
             int startIndex = CompManager.GetBufferIndex(ST.AUTO, scripts);

@@ -35,6 +35,7 @@ namespace ScriptGen
             List<string> inputs = input.ToList();
             for (int m = 0; m < inputs.Count; m++)
             {
+                inputs[m] = Regex.Replace(inputs[m], RegFunctions.defLineCommentReg, "");
                 if (Regex.IsMatch(inputs[m], RegFunctions.defLineCommentReg) || string.IsNullOrEmpty(inputs[m]))
                 {
                     inputs.RemoveAt(m);

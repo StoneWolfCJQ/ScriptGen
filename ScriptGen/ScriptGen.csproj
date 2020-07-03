@@ -56,6 +56,7 @@
     <Compile Include="SRC\Comp\Derived\Axis\ACSAxis.cs" />
     <Compile Include="SRC\Comp\Derived\Axis\CommonAxis.cs" />
     <Compile Include="SRC\Comp\Derived\EC\EC.cs" />
+    <Compile Include="SRC\Comp\Derived\IO\AIOCoupler.cs" />
     <Compile Include="SRC\Comp\Derived\IO\IOCoupler.cs" />
     <Compile Include="SRC\Comp\Base\CompTemplate.cs" />
     <Compile Include="SRC\Comp\Derived\LASER\LCM.cs" />
