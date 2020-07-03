@@ -5,12 +5,12 @@ INT AxisNo
 !!---------------Input And Ouput Slave Index
 IOConfig:
 &IOINRepeat
-	ECIN(ECGETOFFSET("Input", #SlaveIndex#, 1) + #NUM#, @INAME#IOIndex#)
+	ECIN(ECGETOFFSET("#MappingName#", #SlaveIndex#, 1) + #NUM#, @INAME#IOIndex#)
 
 &
 
 &IOOUTRepeat
-	ECOUT(ECGETOFFSET("Output", #SlaveIndex#, 0) + #NUM#, @ONAME#IOIndex#)
+	ECOUT(ECGETOFFSET("#MappingName#", #SlaveIndex#, 0) + #NUM#, @ONAME#IOIndex#)
 
 &
 

@@ -113,6 +113,7 @@ namespace ScriptGen
                             {"@INAME",c.content[KeyWordDef.INAME] },
                             {"#IOIndex#",IIndex.ToString()},
                             {"#NUM#", "0" },
+                            {"#MappingName#", "Input" }
                         });
                         IDictList.Add(new Dictionary<string, string>
                         {
@@ -120,6 +121,7 @@ namespace ScriptGen
                             {"@INAME",c.content[KeyWordDef.INAME] },
                             {"#IOIndex#",(IIndex+1).ToString()},
                             {"#NUM#", "1" },
+                            {"#MappingName#", "Input" }
                         });
                         IIndex += 2;
                         inputStartIndex = IIndex;
@@ -132,6 +134,7 @@ namespace ScriptGen
                             {"@ONAME",c.content[KeyWordDef.ONAME] },
                             {"#IOIndex#",OIndex.ToString()},
                             {"#NUM#", "0" },
+                            {"#MappingName#", "Output" }
                         });
                         ODictList.Add(new Dictionary<string, string>
                         {
@@ -139,6 +142,7 @@ namespace ScriptGen
                             {"@ONAME",c.content[KeyWordDef.ONAME] },
                             {"#IOIndex#",(OIndex+1).ToString() },
                             {"#NUM#", "1" },
+                            {"#MappingName#", "Output" }
                         });
                         OIndex += 2;
                         outputStartIndex = OIndex;

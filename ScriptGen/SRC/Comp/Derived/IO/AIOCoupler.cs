@@ -113,6 +113,7 @@ namespace ScriptGen
                             {"@INAME",c.content[KeyWordDef.INAME] },
                             {"#IOIndex#",IIndex.ToString()},
                             {"#NUM#", jj.ToString() },
+                            {"#MappingName#", "DI1" }
                         });
                         IIndex += 1;
                         inputStartIndex = IIndex;
@@ -125,6 +126,7 @@ namespace ScriptGen
                             {"@ONAME",c.content[KeyWordDef.ONAME] },
                             {"#IOIndex#",OIndex.ToString()},
                             {"#NUM#", jj.ToString() },
+                            {"#MappingName#", "DO1" }
                         });
                         OIndex += 1;
                         outputStartIndex = OIndex;
