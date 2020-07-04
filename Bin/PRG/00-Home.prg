@@ -181,6 +181,7 @@ LI:
 	END
 	WAIT 100
 	SET FPOS(nAxis)=FPOS(nAxis)-IND(nAxis) + homeOffset
+	PTP nAxis, homeOffset
 RET
 
 !!--------Index Home Reverse
@@ -208,6 +209,7 @@ RI:
 	END
 	WAIT 100
 	SET FPOS(nAxis)=FPOS(nAxis)-IND(nAxis) + homeOffset
+	PTP nAxis, homeOffset
 RET
 
 !!--------Check IF Index Near Limit
