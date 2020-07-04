@@ -66,9 +66,10 @@ MFLAGS(nAxis).#HOME = 1
 
 
 &
-&CompRepeat    
-ERRORMAP1D #AxisNo#, 0, @CS, @CT, ErrorCompData#NAME#
-ERRORMAPON #AxisNo#, 0
+&CompRepeat   
+MFLAGS(#AxisNo#).17 = 0
+CONNECT RPOS(#AxisNo#) = APOS(#AxisNo#) + MAP(APOS(#AxisNo#), ErrorCompData#NAME#, @CS, @CT) 
+DEPENDS #AxisNo#, #AxisNo#
 
 
 &
@@ -77,7 +78,7 @@ STOP
 !!--------Parameter Setting
 AxisSet:
 	ENABLE nAxis
-	ERRORUNMAP nAxis, 0
+	MFLAGS(nAxis).17 = 1
 	VEL(nAxis)=NSpeed
 	ACC(nAxis)=NSpeed*10
 	DEC(nAxis)=NSpeed*10

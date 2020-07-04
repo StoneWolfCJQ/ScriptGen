@@ -14,8 +14,9 @@ STOP
 
 !!---------------Measure Program
 CompMeasure:
-INT axisNo, dwell, startPos,endPos,step,vel
+INT dwell, endPos, vel
 INT errCompOn
+GLOBAL INT axisNo, startPos, step
 
 axisNo=0
 startPos=0
@@ -27,19 +28,20 @@ dwell=6000
 
 IF errCompOn=1
     !Please run the script from line 1 after data pasting and before mapping
-    ERRORUNMAP axisNo, 0
+    MFLAGS(axisNo).17 = 0
 &CompRepeat
     IF axisNo=#AxisNo#
-        ERRORMAP1D axisNo, 0, startPos, step, ErrorCompData#NAME#
+        CONNECT RPOS(axisNo) = APOS(axisNo) + MAP(APOS(axisNo), ErrorCompData#NAME#, startPos, step) 
     END
 
 &
-    ERRORMAPON axisNo, 0
+    DEPENDS axisNo, axisNo
 ELSE
-    ERRORUNMAP axisNo, 0
+    MFLAGS(axisNo).17 = 1
 END
 
 !Motion parameters
+ENABLE axisNo
 VEL(axisNo)=vel
 ACC(axisNo)=vel*10
 DEC(axisNo)=vel*10
@@ -50,17 +52,17 @@ JERK(axisNo)=vel*50
 INT s;s=startPos
 LOOP 2
     WHILE(s<=endPos)
-        PTP axisNo,s
-        TILL ^MST(axisNo).#MOVE
         WAIT dwell
         s=s+step
+        PTP axisNo,s
+        TILL ^MST(axisNo).#MOVE
     END
 
     WHILE(s>=startPos)
-        PTP axisNo,s
-        TILL ^MST(axisNo).#MOVE
         WAIT dwell
         s=s-step
+        PTP axisNo,s
+        TILL ^MST(axisNo).#MOVE
     END
 END
 STOP
