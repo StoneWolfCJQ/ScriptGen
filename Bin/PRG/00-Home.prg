@@ -181,6 +181,7 @@ LI:
 	END
 	WAIT 100
 	SET FPOS(nAxis)=FPOS(nAxis)-IND(nAxis) + homeOffset
+	WAIT 100
 	PTP nAxis, homeOffset
 RET
 
@@ -209,6 +210,7 @@ RI:
 	END
 	WAIT 100
 	SET FPOS(nAxis)=FPOS(nAxis)-IND(nAxis) + homeOffset
+	WAIT 100
 	PTP nAxis, homeOffset
 RET
 
