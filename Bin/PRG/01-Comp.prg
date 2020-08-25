@@ -51,14 +51,14 @@ JERK(axisNo)=vel*50
 !Motion process
 INT s;s=startPos
 LOOP 2
-    WHILE(s<=endPos)
+    WHILE(s < endPos)
         WAIT dwell
         s=s+step
         PTP axisNo,s
         TILL ^MST(axisNo).#MOVE
     END
 
-    WHILE(s>=startPos)
+    WHILE(s > startPos)
         WAIT dwell
         s=s-step
         PTP axisNo,s
