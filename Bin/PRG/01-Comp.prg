@@ -48,17 +48,32 @@ DEC(axisNo)=vel*10
 KDEC(axisNo)=vel*20
 JERK(axisNo)=vel*50
 
+INT _sign
+_sign = (endPos - startPos) / ABS(endPos - startPos)
+step = ABS(step) * _sign
+IF (step = 0)
+    STOP
+END
+
+IF FPOS(axisNo) <> startPos
+    PTP axisNo, startPos
+    TILL ^MST(axisNo).#MOVE
+    IF MST(axisNo).0 <> 1
+        STOP
+    END
+END
+
 !Motion process
 INT s;s=startPos
 LOOP 2
-    WHILE(s < endPos)
+    WHILE(_sign * s < _sign * endPos)
         WAIT dwell
         s=s+step
         PTP axisNo,s
         TILL ^MST(axisNo).#MOVE
     END
 
-    WHILE(s > startPos)
+    WHILE(_sign * s > _sign * startPos)
         WAIT dwell
         s=s-step
         PTP axisNo,s
