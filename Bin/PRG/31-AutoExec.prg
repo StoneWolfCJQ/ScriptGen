@@ -3,14 +3,12 @@
 INT AxisNo
 
 !!---------------Input And Ouput Slave Index
+!!@MapCommand: ECIN or ECOUT; IOType: I-1, O-0
 IOConfig:
-&IOINRepeat
-	ECIN(ECGETOFFSET("#MappingName#", #SlaveIndex#, 1) + #NUM#, @INAME#IOIndex#)
-
-&
-
-&IOOUTRepeat
-	ECOUT(ECGETOFFSET("#MappingName#", #SlaveIndex#, 0) + #NUM#, @ONAME#IOIndex#)
+	INT IOStartIndex
+&IORepeat
+	IOStartIndex = #StartIndex#
+	#MapCommand#(ECGETOFFSET("#MappingName#", IOStartIndex + #Increment#, #IOType#) + #NUM#, @IONAME#IOIndex#)
 
 &
 

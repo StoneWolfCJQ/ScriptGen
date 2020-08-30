@@ -102,6 +102,7 @@ namespace ScriptGen
         {
             Dictionary<int, string> ms = RegFunctions.GetRepeat(source, keyWord, startIndex, count);
             int index = 0;
+            int _count = 0;
             foreach (var rkv in ms)
             {
                 index += rkv.Key;
@@ -110,6 +111,15 @@ namespace ScriptGen
                     string matchStr = rkv.Value;
                     foreach (var tkv in dt)
                     {
+                        if (_count != 0 && tkv.Key.StartsWith("@@"))
+                        {
+                            int _index = matchStr.IndexOf(tkv.Key);
+                            if (_index != -1)
+                            {
+                                string line = GetWholeLine(matchStr, _index);
+                                matchStr.Replace(line + "\r\n", "");
+                            }
+                        }
                         matchStr = matchStr.Replace(tkv.Key, tkv.Value);
                     }
                     List<string> t = matchStr.Split(new string[] { "\r\n" }, StringSplitOptions.None).ToList();
@@ -118,6 +128,7 @@ namespace ScriptGen
                     matchStr = string.Join("\r\n", t);
                     source = source.Insert(index, matchStr);
                     index += matchStr.Length;
+                    _count++;
                 }
                 index -= rkv.Key;
             }

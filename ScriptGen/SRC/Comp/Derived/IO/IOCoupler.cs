@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Runtime.Remoting.Messaging;
 
 namespace ScriptGen
 {
@@ -14,13 +15,13 @@ namespace ScriptGen
         protected virtual string TopoReg { get { return @"(?i)([io])(\d+)"; } }
         protected virtual List<Dictionary<bool ,int>> TopoDict { get; set; }
 
-        protected static int inputStartIndex;
-        protected static int outputStartIndex;
+        public static List<int> inputIndexes;
+        public static List<int> outputIndexes;
 
         public IOCoupler()
         {
-            inputStartIndex = 0;
-            outputStartIndex = 0;
+            inputIndexes = inputIndexes == null ? new List<int>() { -1 } : inputIndexes;
+            outputIndexes = outputIndexes == null ? new List<int>() { -1 } : outputIndexes;
         }
 
         protected override int GetSO(Dictionary<string, string> d, CompInfoTemp output)
@@ -92,74 +93,82 @@ namespace ScriptGen
         {
             ParseTopo(c.content[KeyWordDef.TOP]);
             //Write IO Config
-            string IKeyWord = "IOINRepeat";
-            string OKeyWord = "IOOUTRepeat";
-            List<Dictionary<string, string>> IDictList = new List<Dictionary<string, string>>();
-            List<Dictionary<string, string>> ODictList = new List<Dictionary<string, string>>();
-            int slaveIndex = c.slaveStart + 1;
-            int IIndex = GetIOStartIndex(true, c);
-            int OIndex = GetIOStartIndex(false, c);
-            foreach (var dt in TopoDict)
-            {
-                int i = dt.First().Value;
-                bool isIn = dt.First().Key;
-                for (; i > 0; i--)
-                {
-                    if (isIn)
-                    {
-                        IDictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@INAME",c.content[KeyWordDef.INAME] },
-                            {"#IOIndex#",IIndex.ToString()},
-                            {"#NUM#", "0" },
-                            {"#MappingName#", "Input" }
-                        });
-                        IDictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@INAME",c.content[KeyWordDef.INAME] },
-                            {"#IOIndex#",(IIndex+1).ToString()},
-                            {"#NUM#", "1" },
-                            {"#MappingName#", "Input" }
-                        });
-                        IIndex += 2;
-                        inputStartIndex = IIndex;
-                    }
-                    else
-                    {
-                        ODictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@ONAME",c.content[KeyWordDef.ONAME] },
-                            {"#IOIndex#",OIndex.ToString()},
-                            {"#NUM#", "0" },
-                            {"#MappingName#", "Output" }
-                        });
-                        ODictList.Add(new Dictionary<string, string>
-                        {
-                            {"#SlaveIndex#",slaveIndex.ToString() },
-                            {"@ONAME",c.content[KeyWordDef.ONAME] },
-                            {"#IOIndex#",(OIndex+1).ToString() },
-                            {"#NUM#", "1" },
-                            {"#MappingName#", "Output" }
-                        });
-                        OIndex += 2;
-                        outputStartIndex = OIndex;
-                    }
-                    slaveIndex++;
-                }
-            }
+            string KeyWord = "IORepeat";
             int startIndex = CompManager.GetBufferIndex(ST.AUTO, scripts);
-            int j= scripts.IndexOf($"#{autoBufferNo}\r\n");
-            TextFunctions.AppendMultiRepeat(ref scripts, IKeyWord, IDictList, startIndex);
-            TextFunctions.AppendMultiRepeat(ref scripts, OKeyWord, ODictList, startIndex);
+            List<Dictionary<string, string>> IODictList = GenerateDictList(c, out int IIndex, out int OIndex);
+            IODictList = IODictList.OrderByDescending(d => d["#IOType#"]).Select((d, i) =>
+            { 
+                if (i != 0)
+                {
+                    d.Remove("#StartIndex#");
+                }
+                return d;
+            }).ToList();
+            CheckIndexes(IODictList);
+            TextFunctions.AppendMultiRepeat(ref scripts, KeyWord, IODictList, startIndex);
+
             if (!c.content.ContainsKey("EMG"))
             {
                 c.content.Add("EMG", "EMG");
             }
             TextFunctions.ReplaceSingle(ref scripts, c.content, startIndex);
             TextFunctions.AppendMultiNoRepeat(ref scripts, c.content, startIndex);
+        }
+
+        protected virtual List<Dictionary<string, string>> GenerateDictList(CompInfoTemp c, out int IIndex, out int OIndex)
+        {
+            List<Dictionary<string, string>> IODictList = new List<Dictionary<string, string>>();
+            IIndex = GetIOStartIndex(true, c);
+            OIndex = GetIOStartIndex(false, c);
+            int IOIncrement = 0;
+            foreach (var dt in TopoDict)
+            {
+                int i = dt.First().Value;
+                bool isIn = dt.First().Key;
+                for (; i > 0; i--)
+                {
+                    IODictList.AddRange(GenerateSingleDictList(c, isIn, ref IOIncrement, ref IIndex, ref OIndex));
+                }
+            }
+            return IODictList;
+        }
+
+        public virtual List<Dictionary<string, string>> GenerateSingleDictList(CompInfoTemp c, bool isIn, ref int IOIncrement, ref int IIndex, ref int OIndex)
+        {
+            string MapCommand = isIn ? "ECIN" : "ECOUT";
+            string IOType = isIn ? "1" : "0";
+            string MappingName = isIn ? "Input" : "Output";
+            string IOName = isIn ? c.content[KeyWordDef.INAME] : c.content[KeyWordDef.ONAME];
+            int _IONameIndex = isIn ? IIndex : OIndex;
+            int _IOIncrement = IOIncrement;
+            IIndex += isIn ? 2 : 0;
+            OIndex += !isIn ? 2 : 0;
+            IOIncrement++;
+            return new List<Dictionary<string, string>>
+            {
+                new Dictionary<string, string>
+                        {
+                            {"#StartIndex#",(c.slaveStart + 1).ToString() },
+                            {"#MapCommand#",MapCommand },
+                            {"#MappingName#", MappingName },
+                            {"#Increment#", _IOIncrement.ToString() },
+                            {"#IOType#", IOType },
+                            {"#NUM#", "0" },
+                            {"@IONAME", IOName},
+                            {"#IOIndex#", _IONameIndex.ToString() },
+                        },
+                new Dictionary<string, string>
+                        {
+                            {"#StartIndex#",(c.slaveStart + 1).ToString() },
+                            {"#MapCommand#",MapCommand },
+                            {"#MappingName#", MappingName },
+                            {"#Increment#", _IOIncrement.ToString() },
+                            {"#IOType#", IOType },
+                            {"#NUM#", "1" },
+                            {"@IONAME", IOName},
+                            {"#IOIndex#", (++_IONameIndex).ToString() },
+                        },
+            };
         }
 
         protected override void WriteDBuffer(CompInfoTemp c, ref string scripts)
@@ -172,11 +181,28 @@ namespace ScriptGen
             string s = c.content[isIn ? KeyWordDef.ISI : KeyWordDef.OSI];
             if (s == "AUTO")
             {
-                return isIn ? inputStartIndex : outputStartIndex;
+                return isIn ? inputIndexes.Max() + 1 : outputIndexes.Max() + 1;
             }
             else
             {
                 return int.Parse(s);
+            }
+        }
+
+        protected virtual void CheckIndexes(List<Dictionary<string, string>> IODictList)
+        {
+            CheckIndexes(IODictList, inputIndexes, true);
+            CheckIndexes(IODictList, outputIndexes, false);
+        }
+
+        protected virtual void CheckIndexes(List<Dictionary<string, string>> IODictList, List<int> indexes, bool isIn)
+        {
+            indexes.AddRange(from d in IODictList where d["#IOType#"] == (isIn ? "1" : "0") select int.Parse(d["#IOIndex#"]));
+            string name = isIn ? "EIN" : "EOUT";
+            var count = from i in indexes group i by i into gi where gi.Count() > 1 select new { s = $"{name}{gi.Key}" };
+            if (count.Count() > 0)
+            {
+                throw new Exception("存在重复IO： " + string.Join(", ", from c in count select c.s));
             }
         }
     }
