@@ -101,8 +101,8 @@ RET
 LimitDetect:
 &LimitRepeat
     AxisNo = #AxisNo#
-	_limit_R = @RL
-	_limit_L = @LL
+#RightLimit#	_limit_R = @RL
+#LeftLimit#	_limit_L = @LL
 #RightLimit#	CALL RightLimitA
 #LeftLimit#	CALL LeftLimitA
 !#RightLimit#	IF @RL
