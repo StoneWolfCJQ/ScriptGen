@@ -1,6 +1,6 @@
 !---------------------AutoExecute Script
 !AUTOEXEC:
-INT AxisNo
+INT AxisNo, _sum, _limit_L, _limit_R
 
 !!---------------Input And Ouput Slave Index
 !!@MapCommand: ECIN or ECOUT; IOType: I-1, O-0
@@ -40,32 +40,7 @@ INT COUNT;COUNT=0
 @LIGHT=1
 Unstop:
 	WHILE 1		
-        EMG=9
-		!EMG Function
-		IF @@EMG=0
-		    COUNT=COUNT+1
-			KILL ALL		
-			@MOTOR=0!MOTOR
-			@DUST=0!DUST
-			@SHUTTER=0!SHUTTER
-			@RED=1!RED
-			@GREEN=0!GREEN
-			@DOOR=0!DOOR
-			@ION=0!ION
-			IF COUNT = 1
-				@BUZZ=1!BUZZ
-			END	
-		    HALT ALL
-			DISABLE ALL
-			EONCE=0
-		ELSE
-			IF EONCE=0
-				@RED=0!RED
-				@BUZZ=0!BUZZ
-				EONCE=1
-				COUNT=0
-			END
-		END
+		CALL EMGProtect
 		CALL LimitDetect
 		CALL SafeGuard 
 	END
@@ -79,7 +54,7 @@ CommutProcess:
 &CommutRepeat
     AxisNo=#AxisNo#
 	IF ^MFLAGS(AxisNo).#BRUSHOK
-		ERRORUNMAP AxisNo,0
+		MFLAGS(AxisNo).17 = 1
 		ENABLE AxisNo
 		WAIT 2000
 		COMMUT AxisNo
@@ -92,20 +67,54 @@ CommutProcess:
 &
 RET
 
+!!---------------EMG Protection
+EMGProtect:
+	EMG=9
+	!EMG Function
+	IF @@EMG=0
+		COUNT=COUNT+1
+		KILL ALL		
+		@MOTOR=0!MOTOR
+		@DUST=0!DUST
+		@SHUTTER=0!SHUTTER
+		@RED=1!RED
+		@GREEN=0!GREEN
+		@DOOR=0!DOOR
+		@ION=0!ION
+		IF COUNT = 1
+			@BUZZ=1!BUZZ
+		END	
+		HALT ALL
+		DISABLE ALL
+		EONCE=0
+	ELSE
+		IF EONCE=0
+			@RED=0!RED
+			@BUZZ=0!BUZZ
+			EONCE=1
+			COUNT=0
+		END
+	END
+RET
+
 !!---------------Limit Detecting
 LimitDetect:
 &LimitRepeat
-    AxisNo=#AxisNo#
-#RightLimit#	IF @RL
-#RightLimit#		SAFINI(AxisNo).#RL=1
-#RightLimit#	ELSE
-#RightLimit#		SAFINI(AxisNo).#RL=0
-#RightLimit#	END
-#LeftLimit#	IF @LL
-#LeftLimit#		SAFINI(AxisNo).#LL=1
-#LeftLimit#	ELSE
-#LeftLimit#		SAFINI(AxisNo).#LL=0
-#LeftLimit#	END	
+    AxisNo = #AxisNo#
+	_limit_R = @RL
+	_limit_L = @LL
+#RightLimit#	CALL RightLimitA
+#LeftLimit#	CALL LeftLimitA
+!#RightLimit#	IF @RL
+!#RightLimit#		SAFINI(AxisNo).#RL=1
+!#RightLimit#	ELSE
+!#RightLimit#		SAFINI(AxisNo).#RL=0
+!#RightLimit#	END
+!#LeftLimit#	IF @LL
+!#LeftLimit#		SAFINI(AxisNo).#LL=1
+!#LeftLimit#	ELSE
+!#LeftLimit#		SAFINI(AxisNo).#LL=0
+!#LeftLimit#	END	
 
 
 &
@@ -116,4 +125,30 @@ SafeGuard:
 &SAFE_MACRO
 #ITEM#
 &
+RET
+
+!!---------------Right Limit Algorithm
+RightLimitA:
+	IF _limit_R > 1 | _limit_R < 0
+		_limit_R = 0
+	END
+	_sum = 4*_limit_R + 2*FAULT(AxisNo).#RL + SAFINI(AxisNo).#RL
+	IF _sum = 0 | _sum = 3 | _sum = 5 | _sum = 6
+		SAFINI(AxisNo).#RL = 1
+	ELSE
+		SAFINI(AxisNo).#RL = 0
+	END
+RET
+
+!!---------------Left Limit Algorithm
+LeftLimitA:
+	IF _limit_L > 1 | _limit_L < 0
+		_limit_L = 0
+	END
+	_sum = 4*_limit_L + 2*FAULT(AxisNo).#LL + SAFINI(AxisNo).#LL
+	IF _sum = 0 | _sum = 3 | _sum = 5 | _sum = 6
+		SAFINI(AxisNo).#LL = 1
+	ELSE
+		SAFINI(AxisNo).#LL = 0
+	END
 RET

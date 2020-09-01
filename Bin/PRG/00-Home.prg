@@ -63,6 +63,8 @@ CALL AxisSet
 CALL #HomingMethod#
 #GoSafe#CALL GoSafePos!Optional
 MFLAGS(nAxis).#HOME = 1
+FDEF(nAxis).#SLL=1
+FDEF(nAxis).#SRL=1
 
 
 &
