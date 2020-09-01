@@ -5,6 +5,7 @@ REAL safePos
 INT onLimit
 INT ZAxisNo
 REAL homeOffset
+INT S_TEMP(200)
 
 !---------------------Custom Functions Here
 !!---------------SafeCheck: Z Goto RLimit   
@@ -46,13 +47,15 @@ ZL@BH(#AxisNo#) = 1 $
 
 !---------------------Homing Process
 !!---------------Some Encoders Are Absolute
-!!---------------Don't Go Home After First Home
+!!---------------Don't Go Home After First Home	
 Main:
 !!---------------Axis Description
 
 !--------------Axis Set And Process
 &HomeRepeat
 !#NAME#
+SINGLE_AXIS_HOME(#AxisNo#).0 = 0
+HomeSetAxis#AxisNo#:
 nAxis = #AxisNo#
 NSpeed = #NSpeed#
 HSpeed = #HSpeed#
@@ -62,20 +65,24 @@ CALL AxisSet
 !CALL LeaveLimit
 CALL #HomingMethod#
 #GoSafe#CALL GoSafePos!Optional
-MFLAGS(nAxis).#HOME = 1
-FDEF(nAxis).#SLL=1
-FDEF(nAxis).#SRL=1
-
-
-&
-&CompRepeat   
-MFLAGS(#AxisNo#).17 = 0
-CONNECT RPOS(#AxisNo#) = APOS(#AxisNo#) + MAP(APOS(#AxisNo#), ErrorCompData#NAME#, @CS, @CT) 
-DEPENDS #AxisNo#, #AxisNo#
+CALL HomeComplete
+#COMP#CALL ErrorCompCallAxis#AxisNo#
+CALL SingleAxisHomeStop
 
 
 &
 STOP
+
+!!--------Axis Compensation
+&CompRepeat
+ErrorCompCallAxis#AxisNo#:
+MFLAGS(#AxisNo#).17 = 0
+CONNECT RPOS(#AxisNo#) = APOS(#AxisNo#) + MAP(APOS(#AxisNo#), ErrorCompData#NAME#, @CS, @CT) 
+DEPENDS #AxisNo#, #AxisNo#
+RET
+
+
+&
 !---------------------Home Functions
 !!--------Parameter Setting
 AxisSet:
@@ -90,6 +97,9 @@ AxisSet:
 	FDEF(nAxis).#SLL=0
 	FDEF(nAxis).#SRL=0
 	MFLAGS(nAxis).#HOME=0
+
+	S_TEMP(nAxis).0 = SINGLE_AXIS_HOME(nAxis).0
+	SINGLE_AXIS_HOME(nAxis).0 = 0
 RET
 
 !!--------Away from Limit
@@ -234,3 +244,18 @@ ZAxisSafe:
 	ENABLE (ZAxisNo)
 	JOG/v ZAxisNo, 10
 RET
+
+!!--------Home Complete Action
+HomeComplete:
+	MFLAGS(nAxis).#HOME = 1
+	FDEF(nAxis).#SLL=1
+	FDEF(nAxis).#SRL=1
+RET
+
+!!--------Single Axis Home Func
+SingleAxisHomeStop:
+	IF S_TEMP(nAxis).0
+		STOP
+	ELSE
+		RET
+	END

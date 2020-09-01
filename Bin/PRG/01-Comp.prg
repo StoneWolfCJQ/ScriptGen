@@ -1,6 +1,7 @@
 !---------------------Compensating Script
 !!---------------Data Program
 AUTOEXEC:
+SINGLE_AXIS_HOME_NO = -1
 &CompRepeat
 AxisComp#NAME#:
 !---DataArea
@@ -11,6 +12,25 @@ AxisComp#NAME#:
 
 &  
 STOP
+
+!!---------------Single Axis Home
+SingleAxisHome:
+IF SINGLE_AXIS_HOME_NO < 0 | SINGLE_AXIS_HOME_NO > 199
+    STOP
+END
+
+&SingleAxisHome
+!#NAME#
+IF SINGLE_AXIS_HOME_NO = #AxisNo# $ ^PST(@HG).#RUN
+    SINGLE_AXIS_HOME(SINGLE_AXIS_HOME_NO).0 = 1
+    START @HG, HomeSetAxis#AxisNo#
+END
+
+&
+
+SINGLE_AXIS_HOME_NO = -1
+STOP
+
 
 !!---------------Measure Program
 CompMeasure:

@@ -25,7 +25,7 @@ AxisConfig:
 	CERRV(AxisNo)=@CERRV
 	CERRA(AxisNo)=@CERRA
 	XVEL(AxisNo)=@XVEL
-	XACC(AxisNo)=@XVEL*10
+	XACC(AxisNo)=XVEL(AxisNo)*10
 
 
 &
@@ -53,6 +53,14 @@ CommutProcess:
 
 &CommutRepeat
     AxisNo=#AxisNo#
+    CALL CommutAction
+
+
+&
+RET
+
+!!---------------Commutation Action
+CommutAction:
 	IF ^MFLAGS(AxisNo).#BRUSHOK
 		MFLAGS(AxisNo).17 = 1
 		ENABLE AxisNo
@@ -62,9 +70,6 @@ CommutProcess:
 		DISABLE AxisNo
 		WAIT 500
     END
-
-
-&
 RET
 
 !!---------------EMG Protection
@@ -100,21 +105,17 @@ RET
 !!---------------Limit Detecting
 LimitDetect:
 &LimitRepeat
-    AxisNo = #AxisNo#
-#RightLimit#	_limit_R = @RL
-#LeftLimit#	_limit_L = @LL
-#RightLimit#	CALL RightLimitA
-#LeftLimit#	CALL LeftLimitA
-!#RightLimit#	IF @RL
-!#RightLimit#		SAFINI(AxisNo).#RL=1
-!#RightLimit#	ELSE
-!#RightLimit#		SAFINI(AxisNo).#RL=0
-!#RightLimit#	END
-!#LeftLimit#	IF @LL
-!#LeftLimit#		SAFINI(AxisNo).#LL=1
-!#LeftLimit#	ELSE
-!#LeftLimit#		SAFINI(AxisNo).#LL=0
-!#LeftLimit#	END	
+    AxisNo=#AxisNo#
+#RightLimit#	IF @RL
+#RightLimit#		SAFINI(AxisNo).#RL=1
+#RightLimit#	ELSE
+#RightLimit#		SAFINI(AxisNo).#RL=0
+#RightLimit#	END
+#LeftLimit#	IF @LL
+#LeftLimit#		SAFINI(AxisNo).#LL=1
+#LeftLimit#	ELSE
+#LeftLimit#		SAFINI(AxisNo).#LL=0
+#LeftLimit#	END	
 
 
 &

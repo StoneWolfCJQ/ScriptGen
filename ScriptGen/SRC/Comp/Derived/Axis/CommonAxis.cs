@@ -67,11 +67,12 @@ namespace ScriptGen
                     {"#HomingMethod#", HM },
                     {"#GoSafe#" , c.content.ContainsKey(KeyWordDef.HP)? "" : "!" },
                     {"#NAME#", GetAxisName(c) },
+                    {"#COMP#", int.Parse(c.content[KeyWordDef.CN]) > 0 ? "" : "!" },
                 }
             };
             string repeatKeyWord = "HomeRepeat";
             TextFunctions.AppendMultiRepeat(ref scripts, repeatKeyWord, homeDictList, HGIndex, count);
-
+           
             if (CHM.Contains("Z") || c.content.ContainsKey(KeyWordDef.SZ))
             {
                 TextFunctions.ReplaceSingle(ref scripts, "ZLimitSafeLine__", "", HGIndex, count);
@@ -121,6 +122,20 @@ namespace ScriptGen
 
         protected override void WriteComp(CompInfoTemp c, int compBufferNo, List<int> homeBufferNo, ref string scripts)
         {
+            TextFunctions.AppendMultiRepeat(
+                ref scripts,
+                "SingleAxisHome",
+                new List<Dictionary<string, string>>(){
+                new Dictionary<string, string>()
+                    {
+                        {"#AxisNo#", GetAxisNo(c).ToString()},
+                        {"#NAME#", GetAxisName(c, false) },
+                        {"@HG", GetHomeBufferNo(c, homeBufferNo).ToString() },
+                    }
+                 },
+                CompManager.GetBufferIndex(compBufferNo, scripts),
+                CompManager.GetBufferCount(compBufferNo, scripts)
+                );
             bool CN = int.Parse(c.content[KeyWordDef.CN]) > 0 ? true : false;
             if (!CN)
             {
@@ -139,6 +154,7 @@ namespace ScriptGen
                     {"@CT", c.content[KeyWordDef.CT]},
                     {"@CND", c.content[KeyWordDef.CND] },
                     {"#NAME#", GetAxisName(c, false) },
+                    {"@HG", GetHomeBufferNo(c, homeBufferNo).ToString() },
                 }
             };
             string repeatKeyWord = "CompRepeat";

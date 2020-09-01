@@ -20,8 +20,8 @@ namespace ScriptGen
 
         public IOCoupler()
         {
-            inputIndexes = inputIndexes == null ? new List<int>() { -1 } : inputIndexes;
-            outputIndexes = outputIndexes == null ? new List<int>() { -1 } : outputIndexes;
+            inputIndexes = new List<int>() { -1 } ;
+            outputIndexes = new List<int>() { -1 } ;
         }
 
         protected override int GetSO(Dictionary<string, string> d, CompInfoTemp output)
