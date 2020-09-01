@@ -1,0 +1,25 @@
+//System Paramter
+AO:4
+SO:1
+AT:ACS
+
+//Necessary Parameter
+CN:0
+MU:1
+//AN:
+//HM:
+
+//Depending Parameter
+HS:30//When HM!=D
+HF:0//When HM!=D
+//HG://When HM!=D
+//CS://When CN=1
+//CT://When CN=1
+CND:100//When CN=1
+
+//Unnecesary Parameter
+//HP:
+//LL:
+//RL:
+//SKIP:
+//NAME:
