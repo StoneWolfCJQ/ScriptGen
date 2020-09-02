@@ -24,6 +24,9 @@ END
 IF SINGLE_AXIS_HOME_NO = #AxisNo# $ ^PST(@HG).#RUN
     SINGLE_AXIS_HOME(SINGLE_AXIS_HOME_NO).0 = 1
     START @HG, HomeSetAxis#AxisNo#
+    WHILE PST(@HG).#RUN
+        WAIT 5
+    END
 END
 
 &
