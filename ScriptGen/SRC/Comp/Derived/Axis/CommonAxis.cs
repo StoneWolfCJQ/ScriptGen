@@ -122,20 +122,25 @@ namespace ScriptGen
 
         protected override void WriteComp(CompInfoTemp c, int compBufferNo, List<int> homeBufferNo, ref string scripts)
         {
-            TextFunctions.AppendMultiRepeat(
-                ref scripts,
-                "SingleAxisHome",
-                new List<Dictionary<string, string>>(){
+            string CHM = c.content[KeyWordDef.HM];
+
+            if (!CHM.Contains("D"))
+            {
+                TextFunctions.AppendMultiRepeat(
+                    ref scripts,
+                    "SingleAxisHome",
+                    new List<Dictionary<string, string>>(){
                 new Dictionary<string, string>()
                     {
                         {"#AxisNo#", GetAxisNo(c).ToString()},
                         {"#NAME#", GetAxisName(c, false) },
                         {"@HG", GetHomeBufferNo(c, homeBufferNo).ToString() },
                     }
-                 },
-                CompManager.GetBufferIndex(compBufferNo, scripts),
-                CompManager.GetBufferCount(compBufferNo, scripts)
-                );
+                     },
+                    CompManager.GetBufferIndex(compBufferNo, scripts),
+                    CompManager.GetBufferCount(compBufferNo, scripts)
+                    );
+            }
             bool CN = int.Parse(c.content[KeyWordDef.CN]) > 0 ? true : false;
             if (!CN)
             {

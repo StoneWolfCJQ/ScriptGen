@@ -14,6 +14,7 @@ namespace ScriptGen
         public static Dictionary<string, string> subStrList = new Dictionary<string, string>()
         {
             {"$","&" },
+            {"~", " " }
         };
 
         public static List<string> trimList = new List<string>()

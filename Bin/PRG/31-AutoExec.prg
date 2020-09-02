@@ -107,14 +107,14 @@ LimitDetect:
 &LimitRepeat
     AxisNo=#AxisNo#
 #RightLimit#	IF @RL
-#RightLimit#		SAFINI(AxisNo).#RL=1
-#RightLimit#	ELSE
 #RightLimit#		SAFINI(AxisNo).#RL=0
+#RightLimit#	ELSE
+#RightLimit#		SAFINI(AxisNo).#RL=1
 #RightLimit#	END
 #LeftLimit#	IF @LL
-#LeftLimit#		SAFINI(AxisNo).#LL=1
-#LeftLimit#	ELSE
 #LeftLimit#		SAFINI(AxisNo).#LL=0
+#LeftLimit#	ELSE
+#LeftLimit#		SAFINI(AxisNo).#LL=1
 #LeftLimit#	END	
 
 
