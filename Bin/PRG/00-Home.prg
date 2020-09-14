@@ -242,6 +242,8 @@ RET
 !!--------Z Axis Go Right
 ZAxisSafe:
 	ENABLE (ZAxisNo)
+	FDEF(ZAxisNo).#SLL=0
+	FDEF(ZAxisNo).#SRL=0
 	JOG/v ZAxisNo, 10
 RET
 
