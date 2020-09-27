@@ -76,9 +76,8 @@ STOP
 !!--------Axis Compensation
 &CompRepeat
 ErrorCompCallAxis#AxisNo#:
-MFLAGS(#AxisNo#).17 = 0
-CONNECT RPOS(#AxisNo#) = APOS(#AxisNo#) + MAP(APOS(#AxisNo#), ErrorCompData#NAME#, @CS, @CT) 
-DEPENDS #AxisNo#, #AxisNo#
+ERRORMAP1D nAxis, 0, @CS, @CT, ErrorCompData#NAME#
+ERRORMAPON nAxis, 0
 RET
 
 
@@ -86,6 +85,8 @@ RET
 !---------------------Home Functions
 !!--------Parameter Setting
 AxisSet:
+	ERRORUNMAP nAxis, 0
+	ERRORMAPOFF nAxis, 0
 	ENABLE nAxis
 	MFLAGS(nAxis).17 = 1
 	VEL(nAxis)=NSpeed
