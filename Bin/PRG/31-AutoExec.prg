@@ -37,7 +37,10 @@ Call CommutProcess
 INT EONCE;EONCE=1
 INT EMG
 INT COUNT;COUNT=0
-@LIGHT=1
+&BeforeUnstopRepeat
+#Item# = @Value
+
+&
 Unstop:
 	WHILE 1		
 		CALL EMGProtect
