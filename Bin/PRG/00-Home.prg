@@ -132,7 +132,7 @@ L:
 	HALT nAxis
 	TILL ^MST(nAxis).#MOVE
 
-	JOG/v nAxis, NSpeed
+	JOG/v nAxis, NSpeed / 2
 	TILL ^FAULT(nAxis).#LL
 	WAIT 200
 	HALT nAxis
@@ -155,11 +155,14 @@ R:
 	HALT nAxis
 	WAIT 200
 
-	JOG/v nAxis, -NSpeed
-	TILL ^FAULT(nAxis).#RL
+	JOG/v nAxis, -NSpeed / 2
+	TILL ^FAULT(nAxis).#RL, 200
 	WAIT 200
 	HALT nAxis
 	TILL ^MST(nAxis).#MOVE
+	IF FAULT(nAxis).#RL
+		RET
+	END
 
 	JOG/v nAxis, HSpeed
 	TILL FAULT(nAxis).#RL $ ^MST(nAxis).#MOVE
