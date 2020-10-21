@@ -11,13 +11,6 @@ OSI:AUTO
 //TOP:
 
 //Unnecesary Parameter
-//LIGHT:
-//DUST:
-//SHUTTER:
-//RED:
-//GREEN:
-//YELLOW:
-//BUZZ:
-//ION:
-//MOTOR:
-//EMG:
+//OA1:
+//OA2:
+//OA3:

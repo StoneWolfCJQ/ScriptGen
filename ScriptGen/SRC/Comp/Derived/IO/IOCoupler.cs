@@ -107,12 +107,49 @@ namespace ScriptGen
             CheckIndexes(IODictList);
             TextFunctions.AppendMultiRepeat(ref scripts, KeyWord, IODictList, startIndex);
 
+            Dictionary<string, string> OADict = new Dictionary<string, string>
+            {
+                {"OA1",  "BeforeUnstopRepeat"},
+                {"OA2",  "DuringEMGRepeat"},
+                {"OA3",  "EscapeEMGRepeat"},
+            };
+
+            foreach (var kv in OADict)
+            {
+                if (c.content.ContainsKey(kv.Key))
+                {
+                    KeyWord = kv.Value;
+                    IODictList = GetOADictList(c, kv.Key);
+                    TextFunctions.AppendMultiRepeat(ref scripts, KeyWord, IODictList, startIndex);
+                }
+            }
+
             if (!c.content.ContainsKey("EMG"))
             {
                 c.content.Add("EMG", "EMG");
             }
             TextFunctions.ReplaceSingle(ref scripts, c.content, startIndex);
             TextFunctions.AppendMultiNoRepeat(ref scripts, c.content, startIndex);
+        }
+
+        protected virtual List<Dictionary<string, string>> GetOADictList(CompInfoTemp c, string OAKey)
+        {
+            try
+            {
+                var v = c.content[OAKey]
+                    .Split(',')
+                    .Select(s => new Dictionary<string, string>()
+                    {
+                        {"#Item#", s.Split(':')[0] },
+                        {"#Value#", s.Split(':')[1]},
+                    })
+                    .ToList();
+                return v;
+            }
+            catch(Exception e)
+            {
+                throw new Exception($"{c.rname}@{OAKey}:{c.content[OAKey]}表达式错误: {e.Message}");
+            }
         }
 
         protected virtual List<Dictionary<string, string>> GenerateDictList(CompInfoTemp c, out int IIndex, out int OIndex)
