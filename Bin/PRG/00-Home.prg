@@ -161,7 +161,7 @@ R:
 	HALT nAxis
 	TILL ^MST(nAxis).#MOVE
 	IF FAULT(nAxis).#RL
-		RET
+		CALL ThrowError
 	END
 
 	JOG/v nAxis, HSpeed
@@ -265,3 +265,10 @@ SingleAxisHomeStop:
 	ELSE
 		RET
 	END
+
+!!-------Throw Error
+ThrowError:
+	INT THROW_ERROR(1),OVERFLOW_INDEX
+	OVERFLOW_INDEX = 2
+	OVERFLOW_INDEX = THROW_ERROR(OVERFLOW_INDEX)
+STOP
